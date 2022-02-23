@@ -36,7 +36,6 @@ class ProjectUserWork(models.Model):
 
 class Rating(models.Model):
     user_id_rated = models.ForeignKey(User, on_delete=models.CASCADE)
-    update = models.DateTimeField()
     session_rating = models.DateField()
 
 class DetailRating(models.Model):

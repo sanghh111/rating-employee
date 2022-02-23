@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "app"
+    'app.apps.AppConfig'
 ]
 
 MIDDLEWARE = [
@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'rating_employee.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db',
+        'NAME': 'mydatabase',
     }
 }
 

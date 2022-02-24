@@ -2,9 +2,19 @@ from rest_framework import serializers
 from models import User, Skill, UserSkill, GroupSkill, ProjectUserWork, Project, Rating, LogRating, DetailRating
 
 class UserSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
+    id = serializers.IntegerField(read_only=True, required=False)
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
+    first_name = serializers.CharField(required=False)
+    last_name = serializers.CharField(required=False)
+    email = serializers.EmailField(required=False)
+    position = serializers.CharField(required=False)
+    rank = serializers.CharField(required=False)
+#
+# class LoginSerializer(serializers.Serializer):
+#     id = serializers.IntegerField(read_only=True)
+#     username = serializers.CharField()
+#     password = serializers.CharField(write_only=True)
 
 class SkillSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True, required=False)

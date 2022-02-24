@@ -1,7 +1,12 @@
 from rest_framework import serializers
-from models import User, Skill, UserSkill, GroupSkill, ProjectUserWork, Project, Rating, LogRating, DetailRating
 
-class UserSerializer(serializers.Serializer):
+class BasicSerializer(serializers.Serializer):
+    def create(self, validated_data):
+        pass
+    def update(self, instance, validated_data):
+        pass
+
+class UserSerializer(BasicSerializer):
     id = serializers.IntegerField(read_only=True, required=False)
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
@@ -10,29 +15,25 @@ class UserSerializer(serializers.Serializer):
     email = serializers.EmailField(required=False)
     position = serializers.CharField(required=False)
     rank = serializers.CharField(required=False)
-#
-# class LoginSerializer(serializers.Serializer):
-#     id = serializers.IntegerField(read_only=True)
-#     username = serializers.CharField()
-#     password = serializers.CharField(write_only=True)
 
-class SkillSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True, required=False)
-    skill_name = serializers.CharField()
-    group_skill_id = serializers.GroupSkillSerializer()
-
-class GroupSkillSerializer(serializers.Serializer):
+class GroupSkillSerializer(BasicSerializer):
     id = serializers.IntegerField(read_only=True, required=False)
     group_skill_name = serializers.CharField()
 
-class UserSkillSerializer(serializers.Serializer):
+
+class SkillSerializer(BasicSerializer):
     id = serializers.IntegerField(read_only=True, required=False)
-    skill_id = serializers.SkillSerializer()
-    user_id = serializers.UserSerializer()
+    skill_name = serializers.CharField()
+    group_skill_id = GroupSkillSerializer()
+
+class UserSkillSerializer(BasicSerializer):
+    id = serializers.IntegerField(read_only=True, required=False)
+    skill_id = SkillSerializer()
+    user_id = UserSerializer()
     year_of_experience = serializers.IntegerField()
     level = serializers.CharField()
 
-class ProjectSerializer(serializers.Serializer):
+class ProjectSerializer(BasicSerializer):
     id = serializers.IntegerField(read_only=True, required=False)
     project_name = serializers.CharField()
     description = serializers.CharField()
@@ -40,27 +41,27 @@ class ProjectSerializer(serializers.Serializer):
     date_end = serializers.DateField()
     tech_stack = serializers.CharField()
 
-class ProjectUserWorkSerializer(serializers.Serializer):
+class ProjectUserWorkSerializer(BasicSerializer):
     id = serializers.IntegerField(read_only=True, required=False)
-    project_id = serializers.ProjectSerializer()
-    user_id = serializers.UserSerializer()
+    project_id = ProjectSerializer()
+    user_id = UserSerializer()
     position = serializers.CharField()
     work = serializers.CharField()
     achieves = serializers.CharField()
 
-class RatingSerializer(serializers.Serializer):
+class RatingSerializer(BasicSerializer):
     id = serializers.IntegerField(read_only=True, required=False)
-    user_id_rated = serializers.UserSerializer()
+    user_id_rated = UserSerializer()
     session_rating = serializers.DateField()
 
-class DetailRatingSerializer(serializers.Serializer):
+class DetailRatingSerializer(BasicSerializer):
     id = serializers.IntegerField(read_only=True, required=False)
-    user_id_accessor = serializers.UserSerializer()
-    rating_id = serializers.RatingSerializer()
+    user_id_accessor = UserSerializer()
+    rating_id = RatingSerializer()
     description = serializers.CharField()
     score = serializers.IntegerField()
 
-class LogRatingSerializer(serializers.Serializer):
+class LogRatingSerializer(BasicSerializer):
     id = serializers.IntegerField(read_only=True, required=False)
-    detail_rating_id = serializers.DetailRatingSerializer(read_only=True, required=False)
+    detail_rating_id = DetailRatingSerializer(read_only=True, required=False)
     update_at = serializers.DateTimeField()

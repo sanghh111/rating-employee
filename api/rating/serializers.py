@@ -9,7 +9,7 @@ class RatingSerializer(BasicSerializer):
 
 class DetailRatingSerializer(BasicSerializer):
     id = serializers.IntegerField(read_only=True, required=False)
-    user_id_accessor = UserSerializer()
+    user_id_assessor = UserSerializer()
     rating_id = RatingSerializer()
     description = serializers.CharField()
     score = serializers.IntegerField()

@@ -10,6 +10,11 @@ from django.db.models import F
 
 class UserSkillViewSet(ViewSet):
     def list(self, request):
+        skill_id = self.request.query_params.get('skill_id', None)
+        user_id = self.request.query_params.get('user_id', None)
+        year_of_experience = self.request.query_params.get('year_of_experience', None)
+        level = self.request.query_params.get('level', None)
+
         user_skills = UserSkill.objects.all().annotate(
             user_skill_id = F('id'),
             skill_name = F('skill_id__name'),
@@ -23,6 +28,16 @@ class UserSkillViewSet(ViewSet):
             'year_of_experience',
             'level'
         )
+
+        if skill_id:
+            user_skills = user_skills.filter(skill_id=skill_id)
+        if user_id:
+            user_skills = user_skills.filter(user_id=user_id)
+        if year_of_experience:
+            user_skills = user_skills.filter(year_of_experience=year_of_experience)
+        if level:
+            user_skills = user_skills.filter(level=level)
+        
         return Response(user_skills)
     
     def create(self, request, *args, **kwargs):
@@ -78,3 +93,4 @@ class UserSkillDetailViewSet(ViewSet):
 
         serializer = UserSkillSerializer(user_skill)
         return Response(serializer.data)
+    

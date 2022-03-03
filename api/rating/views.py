@@ -1,5 +1,6 @@
 from distutils.log import Log
 from re import L
+from sys import exec_prefix
 from rest_framework.viewsets import ViewSet
 from .serializers import DetailRatingSerializer, LogRatingSerializer, RatingSerializer
 from app.models import Rating, LogRating, DetailRating, User
@@ -34,75 +35,6 @@ class RatingViewSet(ViewSet):
             return Response("Create unsuccessful", status=status.HTTP_400_BAD_REQUEST)
         return Response("Create successfull", status=status.HTTP_201_CREATED)
 
-
-class DetailRatingViewSet(ViewSet):
-    def list(self, request):
-        detail_ratings = DetailRating.objects.all().values()
-        return Response(detail_ratings)
-
-    def create(self, request, *args, **kwagrs):
-        if not request.body:
-            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
-        data = orjson.loads(request.body)
-
-        user_assessor_id = data.get("user_id_assessor", None)
-        rating_id = data.get("rating_id", None)
-        description = data.get("description", None)
-        score = data.get("score", None)
-
-        user_assessor = User.objects.get(pk = user_assessor_id)
-        rating = Rating.objects.get(pk = rating_id)
-
-        detail_rating = DetailRating.objects.create(
-            user_id_assessor = user_assessor,
-            rating_id = rating,
-            description = description,
-            score = score
-        )
-
-        if not detail_rating:
-            return Response("Failed", status=status.HTTP_400_BAD_REQUEST)
-        else:
-            LogRating.objects.create(
-                detail_rating_id = detail_rating,
-                update_at = datetime.datetime.now()
-            )
-            return Response("Create successful", status=status.HTTP_201_CREATED)
-
-    def update(self, request, pk):
-        detail_rating = DetailRating.objects.get(pk = pk)
-        if not detail_rating:
-            return Response("User skill not found", status=status.HTTP_404_NOT_FOUND)
-        
-        if not request.body:
-            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
-        data = orjson.loads(request.body)
-
-        user_assessor_id = data.get("user_id_assessor", None)
-        rating_id = data.get("rating_id", None)
-        description = data.get("description", None)
-        score = data.get("score", None)
-
-        user_assessor = User.objects.get(pk = user_assessor_id)
-        rating = Rating.objects.get(pk = rating_id)
-
-        if user_assessor:
-            detail_rating.user_id_assessor = user_assessor
-        if rating_id:
-            detail_rating.rating_id = rating
-        if description:
-            detail_rating.description = description
-        if score:
-            detail_rating.score = score
-
-        LogRating.objects.create(
-            detail_rating_id = detail_rating,
-            update_at = datetime.datetime.now()
-        )
-
-        serializer = DetailRatingSerializer(detail_rating)
-        return Response(serializer.data)
-
 class LogRatingViewSet(ViewSet):
     def list(self, request):
         user_id_assessor = self.request.query_params.get('user_id_assessor', None)
@@ -110,14 +42,10 @@ class LogRatingViewSet(ViewSet):
 
         log_ratings = LogRating.objects.all().annotate(
             log_rating_id = F('id'),
-            user_id_assessor =F('detail_rating_id__user_id_assessor'),
-            assessor_name = F('detail_rating_id__user_id_assessor__username'),
-            assessor_position = F('detail_rating_id__user_id_assessor__position'),
-            user_id_rated = F('detail_rating_id__rating_id__user_id_rated'),
-            rated_name = F('detail_rating_id__rating_id__user_id_rated__username'),
-            rated_position = F('detail_rating_id__rating_id__user_id_rated__position'),
-            score = F('detail_rating_id__score'),
-            description = F('detail_rating_id__description')
+            assessor_name = F('user_id_assessor__username'),
+            assessor_position = F('user_id_assessor__position'),
+            rated_name = F('user_id_rated__username'),
+            rated_position = F('user_id_rated__position'),
         ).values(
             'log_rating_id',
             'detail_rating_id',
@@ -129,6 +57,7 @@ class LogRatingViewSet(ViewSet):
             'rated_position',
             'score',
             'description',
+            'action',
             'update_at',
         )
         if not log_ratings:

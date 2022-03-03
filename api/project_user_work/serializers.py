@@ -10,3 +10,4 @@ class ProjectUserWorkSerializer(BasicSerializer):
     position = serializers.CharField()
     work = serializers.CharField()
     achieves = serializers.CharField()
+

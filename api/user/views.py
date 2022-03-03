@@ -19,6 +19,7 @@ class UserViewSet(ViewSet):
         
         data = orjson.loads(request.body)
         
+        
         user_name = data.get("user_name", None)
         password = data.get("password", None)
         first_name = data.get("first_name", None)

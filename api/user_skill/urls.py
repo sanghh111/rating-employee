@@ -6,4 +6,5 @@ urlpatterns = [
     path('create/', UserSkillViewSet.as_view({'post':'create'})),
 
     path('update/<int:pk>/', UserSkillDetailViewSet.as_view({'put':'update'})),
+    path('delete/<int:pk>/', UserSkillDetailViewSet.as_view({'delete':'delete'}))
 ]

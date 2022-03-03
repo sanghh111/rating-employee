@@ -93,4 +93,14 @@ class UserSkillDetailViewSet(ViewSet):
 
         serializer = UserSkillSerializer(user_skill)
         return Response(serializer.data)
-    
+
+    def delete(self, request, pk):
+        user_skill = UserSkill.objects.get(pk = pk)
+        if not user_skill:
+            return Response("not found", status=status.HTTP_404_NOT_FOUND)
+        
+        try:
+            user_skill.delete()
+            return Response("Delete successful", status=status.HTTP_200_OK)
+        except:
+            return Response("Delete unsuccessful", status=status.HTTP_400_BAD_REQUEST)

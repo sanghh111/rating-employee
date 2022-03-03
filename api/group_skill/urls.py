@@ -1,5 +1,6 @@
 from django.urls import path, include
-from .views import GroupSkillViewSet, GroupSkillDetailViewSet, SkillViewSet, SkillDetailViewSet
+from .views import GroupSkillViewSet, SkillViewSet
+from .detail import GroupSkillDetailViewSet, SkillDetailViewSet
 
 urlpatterns = [
     path('list/', GroupSkillViewSet.as_view({'get':'list'})),

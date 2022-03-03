@@ -7,4 +7,4 @@ class ProjectUserWork(models.Model):
     project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
     position = models.CharField(max_length=100)
     work = models.CharField(max_length=100)
-    archieves = models.CharField(max_length=100)
+    achieves = models.CharField(max_length=100)

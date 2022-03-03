@@ -13,4 +13,9 @@ class DetailRating(models.Model):
 
 class LogRating(models.Model):
     detail_rating_id = models.ForeignKey(DetailRating, on_delete=models.CASCADE)
+    user_id_assessor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_assessor", default=0, null= True)
+    user_id_rated = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_rated", default=0, null= True)
+    score = models.IntegerField(default=0, null= True)
+    description = models.TextField(blank=True, null=True)
+    action = models.CharField(max_length=50, default='update')
     update_at = models.DateTimeField()

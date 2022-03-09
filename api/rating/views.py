@@ -40,7 +40,7 @@ class LogRatingViewSet(ViewSet):
         user_id_assessor = self.request.query_params.get('user_id_assessor', None)
         user_id_rated = self.request.query_params.get('user_id_rated', None)
 
-        log_ratings = LogRating.objects.all().annotate(
+        log_ratings = LogRating.objects.annotate(
             log_rating_id = F('id'),
             assessor_name = F('user_id_assessor__username'),
             assessor_position = F('user_id_assessor__position'),

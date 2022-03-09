@@ -17,7 +17,7 @@ class DetailRatingViewSet(ViewSet):
         user_id_assessor = self.request.query_params.get('user_id_assessor', None)
         user_id_rated = self.request.query_params.get('user_id_rated', None)
 
-        detail_ratings = DetailRating.objects.all().annotate(
+        detail_ratings = DetailRating.objects.annotate(
             assessor_name = F('user_id_assessor__username'),
             assessor_position = F('user_id_assessor__position'),
             user_id_rated = F('rating_id__user_id_rated'),
@@ -80,7 +80,6 @@ class DetailRatingViewSet(ViewSet):
                 score = score,
                 description = description,
                 action = "Create",
-                update_at = datetime.datetime.now()
             )
             return Response("Create successful", status=status.HTTP_201_CREATED)
 
@@ -124,7 +123,6 @@ class DetailRatingViewSet(ViewSet):
             score = score,
             description = description,
             action = "Update",
-            update_at = datetime.datetime.now()
         )
 
         serializer = DetailRatingSerializer(detail_rating)
@@ -135,13 +133,15 @@ class DetailRatingViewSet(ViewSet):
         if not detail_rating:
             return Response("Detail rating not found", status=status.HTTP_404_NOT_FOUND)
 
-        try:
-            LogRating.objects.create(
-                detail_rating_id = detail_rating,
-                action = "Delete",
-                update_at = datetime.datetime.now()
-            )
-            detail_rating.delete()
-            return Response("Delete successful", status=status.HTTP_200_OK)
-        except:
-            return Response("Delete unsuccessful", status=status.HTTP_400_BAD_REQUEST)
+        # try:
+        LogRating.objects.create(
+            detail_rating_id = detail_rating,
+            action = "Delete",
+        )
+        detail_rating.delete()
+        return Response("Delete successful", status=status.HTTP_200_OK)
+        # except:
+        #     return Response("Delete unsuccessful", status=status.HTTP_400_BAD_REQUEST)
+
+    def total_score():
+        return 1

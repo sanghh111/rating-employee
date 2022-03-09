@@ -1,20 +1,27 @@
 from rest_framework.viewsets import ViewSet
 from app.project.models import Project
 from .serializers import ProjectSerializer
-
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
 import orjson
 from django.db.models import F
-
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import BasicAuthentication, TokenAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class ProjectViewSet(ViewSet):
+
+    #authentication_classes = (JWTAuthentication, )
+    permission_classes = (IsAuthenticated,)
+
     def list(self, request):
 
         project_name = self.request.query_params.get('project_name', None)
         description = self.request.query_params.get('description', None)
         tech_stack = self.request.query_params.get('tech_stack', None)
+
+        token = request.META.get('HTTP_AUTHORIZATION')
 
         projects = Project.objects.all()
 
@@ -25,7 +32,9 @@ class ProjectViewSet(ViewSet):
         if tech_stack:
             projects = projects.filter(tech_stack__contains = tech_stack)
 
+
         serializer = ProjectSerializer(projects, many=True)
+
         return Response(serializer.data)
   
     def create(self, request, *args, **kwargs):

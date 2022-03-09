@@ -7,10 +7,14 @@ from rest_framework import status
 from django.http import Http404
 import orjson
 from django.db.models import F
-
+from rest_framework_simplejwt.authentication import JWTAuthentication
 class ProjectUserWorkViewSet(ViewSet):
+    
+    authentication_classes = (JWTAuthentication, )
+
     def list(self, request):
-        project_user_works = ProjectUserWork.objects.all().annotate(
+        
+        project_user_works = ProjectUserWork.objects.annotate(
             username = F('user_id__username'),
             user_rank = F('user_id__rank'),
             project_name = F('project_id__project_name'),

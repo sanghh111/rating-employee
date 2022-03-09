@@ -15,7 +15,7 @@ class UserSkillViewSet(ViewSet):
         year_of_experience = self.request.query_params.get('year_of_experience', None)
         level = self.request.query_params.get('level', None)
 
-        user_skills = UserSkill.objects.all().annotate(
+        user_skills = UserSkill.objects.annotate(
             user_skill_id = F('id'),
             skill_name = F('skill_id__name'),
             username = F('user_id__username'),

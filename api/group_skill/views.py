@@ -33,7 +33,7 @@ class GroupSkillViewSet(ViewSet):
 
 class SkillViewSet(ViewSet):
     def list(self, request):
-        skills = Skill.objects.all().annotate(
+        skills = Skill.objects.annotate(
             skill_id = F('id'),
             skill_name = F('name'),
             group_skill_name = F('group_skill_id__group_skill_name'),

@@ -14,6 +14,7 @@ from datetime import timedelta
 from pathlib import Path
 
 from django.conf import settings
+import orjson
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -110,7 +111,19 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
                'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    "DEFAULT_RENDERER_CLASSES": (
+                "drf_orjson_renderer.renderers.ORJSONRenderer",
+                "rest_framework.renderers.BrowsableAPIRenderer",
+    ),
+    "ORJSON_RENDERER_OPTIONS": (
+        orjson.OPT_NON_STR_KEYS,
+        orjson.OPT_SERIALIZE_DATACLASS,
+        orjson.OPT_SERIALIZE_NUMPY,
+    ),
+    "DEFAULT_PARSER_CLASSES": (
+        "drf_orjson_renderer.parsers.ORJSONParser",
+    ),
 }
 
 SIMPLE_JWT = {

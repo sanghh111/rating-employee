@@ -6,8 +6,9 @@ from rest_framework import status
 from django.http import Http404
 import orjson
 from django.db.models import F
+from api.base.api_view import BaseAPIView
 
-class GroupSkillViewSet(ViewSet):
+class GroupSkillViewSet(BaseAPIView):
     def list(self, request):
         group_skills = GroupSkill.objects.all()
         serializer = GroupSkillSerializer(group_skills, many=True)
@@ -30,8 +31,7 @@ class GroupSkillViewSet(ViewSet):
         else:
             return Response("Errol", status=status.HTTP_400_BAD_REQUEST)
 
-
-class SkillViewSet(ViewSet):
+class SkillViewSet(BaseAPIView):
     def list(self, request):
         skills = Skill.objects.annotate(
             skill_id = F('id'),

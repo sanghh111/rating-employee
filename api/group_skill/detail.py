@@ -6,8 +6,9 @@ from rest_framework import status
 from django.http import Http404
 import orjson
 from django.db.models import F
+from api.base.api_view import BaseAPIView
 
-class GroupSkillDetailViewSet(ViewSet):
+class GroupSkillDetailViewSet(BaseAPIView):
     def get_detail(self, request, pk):
         group_skill = GroupSkill.objects.get(pk = pk)
         if group_skill:
@@ -46,7 +47,7 @@ class GroupSkillDetailViewSet(ViewSet):
         return Response("Group skill not found", status=status.HTTP_404_NOT_FOUND)
 
 
-class SkillDetailViewSet(ViewSet):
+class SkillDetailViewSet(BaseAPIView):
     def get_detail(self, request, pk):
         skill = Skill.objects.filter(pk = pk).annotate(
             skill_id = F('id'),

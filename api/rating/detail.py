@@ -11,27 +11,32 @@ from django.http import Http404
 import orjson
 from django.db.models import F
 import datetime
+from api.base.authentication import TokenAuthentication
+from api.base.api_view import BaseAPIView
 
-class DetailRatingViewSet(ViewSet):
+class DetailRatingViewSet(BaseAPIView):
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = ()
+
     def list(self, request):
         user_id_assessor = self.request.query_params.get('user_id_assessor', None)
         user_id_rated = self.request.query_params.get('user_id_rated', None)
 
         detail_ratings = DetailRating.objects.annotate(
             assessor_name = F('user_id_assessor__username'),
-            assessor_position = F('user_id_assessor__position'),
+            assessor_position_role = F('user_id_assessor__position_role'),
             user_id_rated = F('rating_id__user_id_rated'),
             rated_name = F('rating_id__user_id_rated__username'),
-            rated_position = F('rating_id__user_id_rated__position'),
+            rated_position_role = F('rating_id__user_id_rated__position_role'),
             session_rating = F('rating_id__session_rating')
         ).values(
             'id',
             'user_id_assessor',
             'assessor_name',
-            'assessor_position',
+            'assessor_position_role',
             'user_id_rated',
             'rated_name',
-            'rated_position',
+            'rated_position_role',
             'score',
             'description',
             'session_rating'
@@ -80,6 +85,7 @@ class DetailRatingViewSet(ViewSet):
                 score = score,
                 description = description,
                 action = "Create",
+                updated_by = request.user.username,
             )
             return Response("Create successful", status=status.HTTP_201_CREATED)
 
@@ -123,6 +129,7 @@ class DetailRatingViewSet(ViewSet):
             score = score,
             description = description,
             action = "Update",
+            updated_by = request.user.username,
         )
 
         serializer = DetailRatingSerializer(detail_rating)
@@ -137,6 +144,7 @@ class DetailRatingViewSet(ViewSet):
         LogRating.objects.create(
             detail_rating_id = detail_rating,
             action = "Delete",
+            updated_by = request.user.username,
         )
         detail_rating.delete()
         return Response("Delete successful", status=status.HTTP_200_OK)

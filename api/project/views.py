@@ -7,14 +7,10 @@ from django.http import Http404
 import orjson
 from django.db.models import F
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import BasicAuthentication, TokenAuthentication
-from rest_framework_simplejwt.authentication import JWTAuthentication
+from api.base.authentication import TokenAuthentication
+from api.base.api_view import BaseAPIView
 
-class ProjectViewSet(ViewSet):
-
-    #authentication_classes = (JWTAuthentication, )
-    permission_classes = (IsAuthenticated,)
-
+class ProjectViewSet(BaseAPIView):
     def list(self, request):
 
         project_name = self.request.query_params.get('project_name', None)
@@ -22,6 +18,8 @@ class ProjectViewSet(ViewSet):
         tech_stack = self.request.query_params.get('tech_stack', None)
 
         token = request.META.get('HTTP_AUTHORIZATION')
+        print(request.headers)
+        print(request.user.id)
 
         projects = Project.objects.all()
 

@@ -11,8 +11,13 @@ from django.http import Http404
 import orjson
 from django.db.models import F
 import datetime
+from api.base.authentication import TokenAuthentication
+from api.base.api_view import BaseAPIView
 
-class RatingViewSet(ViewSet):
+class RatingViewSet(BaseAPIView):
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = ()
+
     def list(self, request):
         ratings = Rating.objects.all().values()
         return Response(ratings)
@@ -35,7 +40,10 @@ class RatingViewSet(ViewSet):
             return Response("Create unsuccessful", status=status.HTTP_400_BAD_REQUEST)
         return Response("Create successfull", status=status.HTTP_201_CREATED)
 
-class LogRatingViewSet(ViewSet):
+class LogRatingViewSet(BaseAPIView):
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = ()
+
     def list(self, request):
         user_id_assessor = self.request.query_params.get('user_id_assessor', None)
         user_id_rated = self.request.query_params.get('user_id_rated', None)
@@ -43,22 +51,23 @@ class LogRatingViewSet(ViewSet):
         log_ratings = LogRating.objects.annotate(
             log_rating_id = F('id'),
             assessor_name = F('user_id_assessor__username'),
-            assessor_position = F('user_id_assessor__position'),
+            assessor_position_role = F('user_id_assessor__position_role'),
             rated_name = F('user_id_rated__username'),
-            rated_position = F('user_id_rated__position'),
+            rated_position_role = F('user_id_rated__position_role'),
         ).values(
             'log_rating_id',
             'detail_rating_id',
             'user_id_assessor',
             'assessor_name',
-            'assessor_position',
+            'assessor_position_role',
             'user_id_rated',
             'rated_name',
-            'rated_position',
+            'rated_position_role',
             'score',
             'description',
             'action',
-            'update_at',
+            'updated_at',
+            'updated_by'
         )
         if not log_ratings:
             return Response("Data not found", status = status.HTTP_404_NOT_FOUND)

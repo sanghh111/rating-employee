@@ -7,8 +7,9 @@ from rest_framework import status
 from django.http import Http404
 import orjson
 from django.db.models import F
+from api.base.api_view import BaseAPIView
 
-class ProjecUserWorkDetailViewSet(ViewSet):
+class ProjecUserWorkDetailViewSet(BaseAPIView):
     def update(self, request, pk):
         project_user_work = ProjectUserWork.objects.get(pk = pk)
         if not project_user_work:

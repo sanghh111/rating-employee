@@ -7,8 +7,9 @@ from rest_framework import status
 from django.http import Http404
 import orjson
 from django.db.models import F
+from api.base.api_view import BaseAPIView
 
-class UserSkillViewSet(ViewSet):
+class UserSkillViewSet(BaseAPIView):
     def list(self, request):
         skill_id = self.request.query_params.get('skill_id', None)
         user_id = self.request.query_params.get('user_id', None)
@@ -64,7 +65,7 @@ class UserSkillViewSet(ViewSet):
             return Response("Errol", status=status.HTTP_400_BAD_REQUEST)
         return Response("Create successful", status=status.HTTP_201_CREATED)
 
-class UserSkillDetailViewSet(ViewSet):
+class UserSkillDetailViewSet(BaseAPIView):
     def update(self, request, pk):
         user_skill = UserSkill.objects.get(pk = pk)
         if not user_skill:

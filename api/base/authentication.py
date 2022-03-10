@@ -4,7 +4,7 @@ import binascii
 from datetime import datetime
 from django.contrib.auth.hashers import check_password, make_password
 from rest_framework import exceptions, HTTP_HEADER_ENCODING
-from rest_framework.authentication import BaseAuthentication, get_authorization_header, BasicAuthentication
+from rest_framework.authentication import BaseAuthentication, get_authorization_header
 from app.models import User
 
 

@@ -18,4 +18,5 @@ class LogRating(models.Model):
     score = models.IntegerField(default=0, null= True)
     description = models.TextField(blank=True, null=True)
     action = models.CharField(max_length=50, default='update')
-    update_at = models.DateTimeField(auto_now_add=True, blank = True, null = True)
+    updated_at = models.DateTimeField(auto_now_add=True, blank = True, null = True)
+    updated_by = models.CharField(max_length=50, blank = True, null = True, default='')

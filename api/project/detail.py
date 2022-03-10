@@ -7,8 +7,9 @@ from rest_framework import status
 from django.http import Http404
 import orjson
 from django.db.models import F
+from api.base.api_view import BaseAPIView
 
-class ProjectDetailViewSet(ViewSet):
+class ProjectDetailViewSet(BaseAPIView):
     def get_object(self, pk):
         try:
             return Project.objects.get(pk=pk)

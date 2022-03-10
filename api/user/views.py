@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ViewSet
 from .serializers import UserSerializer
 from app.models import User
-
+from django.contrib.auth.hashers import make_password
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
@@ -25,18 +25,19 @@ class UserViewSet(ViewSet):
         first_name = data.get("first_name", None)
         last_name = data.get("last_name", None)
         email = data.get("email", None)
-        position = data.get("position", None)
+        position_role = data.get("position_role", None)
         rank = data.get("rank", None)
 
         user = User.objects.create(
             user_name = user_name,
-            password = password,
+            password = make_password(password),
             first_name = first_name,
             last_name = last_name,
             email = email,
-            position = position,
+            position_role = position_role,
             rank = rank,
         )
+        user.save()
 
         if not user:
             return Response("Errol", status=status.HTTP_400_BAD_REQUEST)

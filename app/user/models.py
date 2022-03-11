@@ -4,6 +4,7 @@ import os
 from django.contrib.auth.models import User, AbstractUser
 from django.db import models
 from django.contrib.auth.hashers import check_password, make_password
+from django.utils import timezone
 
 class User(AbstractUser):
     position_role = models.IntegerField(blank=True, null=True)
@@ -61,3 +62,7 @@ class User(AbstractUser):
             self.save()
 
         return self.get_key
+
+    def update_last_login(self):
+        self.last_login = timezone.now()
+        self.save(update_fields=['last_login'])

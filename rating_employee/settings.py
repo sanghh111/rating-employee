@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'app',
     'app.user',
     "rest_framework",
+    'dbview',
 ]
 
 MIDDLEWARE = [

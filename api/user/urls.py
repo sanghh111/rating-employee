@@ -1,6 +1,5 @@
 from django.urls import path, include
 from .views import UserViewSet
-from rest_framework_simplejwt import views as jwt_views
 from .login import UserLoginViewSet
 
 urlpatterns = [

@@ -21,3 +21,4 @@ class BaseModel(models.Model):
                                   verbose_name=('Updated by'))
     class Meta:
         abstract = True
+        

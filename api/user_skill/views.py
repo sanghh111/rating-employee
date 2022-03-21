@@ -8,6 +8,7 @@ from django.http import Http404
 import orjson
 from django.db.models import F
 from api.base.api_view import BaseAPIView
+from app.views.models import UserRolePermission
 
 class UserSkillViewSet(BaseAPIView):
     def list(self, request):

@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 import orjson
 from django.db.models import F
-# from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 # from api.base.authentication import TokenAuthentication
 from api.base.api_view import BaseAPIView
 
@@ -17,7 +17,7 @@ class ProjectViewSet(BaseAPIView):
         # #permission
         user = self.user
         if user.verify_permission('view_project') == False:
-            return Response("User not permission", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
 
 
         project_name = self.request.query_params.get('project_name', None)
@@ -42,7 +42,7 @@ class ProjectViewSet(BaseAPIView):
         #permission
         user = self.user
         if user.verify_permission('add_project') == False:
-            return Response("User not permission", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
         
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
@@ -61,9 +61,6 @@ class ProjectViewSet(BaseAPIView):
             date_end = date_end,
             tech_stack = tech_stack
             )
-        if project:
-            return Response("Create successful", status=status.HTTP_201_CREATED)
-        else:
+        if not project:
             return Response("Errol", status=status.HTTP_400_BAD_REQUEST)
-
-
+        return Response("Create successful", status=status.HTTP_201_CREATED)

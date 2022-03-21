@@ -12,7 +12,7 @@ class GroupSkillViewSet(BaseAPIView):
     def list(self, request):
         user = self.user
         if user.verify_permission('view_groupskill') == False:
-            return Response("User not permission", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+            return Response("Authentication Required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
 
         group_skills = GroupSkill.objects.all()
         serializer = GroupSkillSerializer(group_skills, many=True)

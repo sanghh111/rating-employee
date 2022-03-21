@@ -1,4 +1,4 @@
-from this import s
+
 from rest_framework import serializers
 from ..serializers import BasicSerializer
 from ..user.serializers import UserSerializer

@@ -8,4 +8,6 @@ urlpatterns = [
     path('project-user-work/', include("api.project_user_work.urls")),
     path('rating/', include("api.rating.urls")),
     path('user-skill/', include("api.user_skill.urls")),
+    path('role/', include("api.role.urls")),
+    path('user-role-permission/', include("api.user_role_permission.urls")),
 ]

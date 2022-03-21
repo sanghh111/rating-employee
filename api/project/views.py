@@ -3,23 +3,26 @@ from app.project.models import Project
 from .serializers import ProjectSerializer
 from rest_framework.response import Response
 from rest_framework import status
-from django.http import Http404
 import orjson
 from django.db.models import F
-from rest_framework.permissions import IsAuthenticated
-from api.base.authentication import TokenAuthentication
+# from rest_framework.permissions import IsAuthenticated
+# from api.base.authentication import TokenAuthentication
 from api.base.api_view import BaseAPIView
 
+# from api.base.decorator import permission, has_permission
+
 class ProjectViewSet(BaseAPIView):
+
     def list(self, request):
+        # #permission
+        user = self.user
+        if user.verify_permission('view_project') == False:
+            return Response("User not permission", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+
 
         project_name = self.request.query_params.get('project_name', None)
         description = self.request.query_params.get('description', None)
         tech_stack = self.request.query_params.get('tech_stack', None)
-
-        token = request.META.get('HTTP_AUTHORIZATION')
-        print(request.headers)
-        print(request.user.id)
 
         projects = Project.objects.all()
 
@@ -36,6 +39,11 @@ class ProjectViewSet(BaseAPIView):
         return Response(serializer.data)
   
     def create(self, request, *args, **kwargs):
+        #permission
+        user = self.user
+        if user.verify_permission('add_project') == False:
+            return Response("User not permission", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
         data = orjson.loads(request.body)

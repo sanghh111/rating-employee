@@ -1,5 +1,4 @@
 from django.db import models
-from dbview.models import DbView
 
 class UserRolePermission(models.Model):
     user_id = models.IntegerField()
@@ -12,7 +11,7 @@ class UserRolePermission(models.Model):
     class Meta:
         managed = False
         db_table = "UserRolePermission"
-        indexes = [
-            models.Index(fields=['username',]),
-            models.Index(fields=['role_name','permission_codename',]),
-        ]
+        # indexes = [
+        #     models.Index(fields=['username',]),
+        #     models.Index(fields=['role_name','permission_codename',]),
+        # ]

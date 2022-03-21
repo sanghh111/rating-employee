@@ -5,6 +5,7 @@ from django.contrib.auth.models import User, AbstractUser
 from django.db import models
 from django.contrib.auth.hashers import check_password, make_password
 from django.utils import timezone
+from app.views.models import UserRolePermission
 
 class User(AbstractUser):
     position_role = models.IntegerField(blank=True, null=True)
@@ -66,3 +67,11 @@ class User(AbstractUser):
     def update_last_login(self):
         self.last_login = timezone.now()
         self.save(update_fields=['last_login'])
+
+    def verify_permission(self, codename):
+        permission =  UserRolePermission.objects.filter(user_id=self.id, permission_codename=codename).values('permission_codename') 
+        if not permission:
+                return False
+        return True
+
+    

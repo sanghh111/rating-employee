@@ -14,8 +14,7 @@ class ProjectUserWorkViewSet(BaseAPIView):
     def list(self, request):
         # #permission
         user = self.user
-        if user.verify_permission('view_projectuserwork') == False:
-            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        user.verify_permission('view_projectuserwork')
 
         project_user_works = ProjectUserWork.objects.annotate(
             username = F('user_id__username'),
@@ -38,8 +37,7 @@ class ProjectUserWorkViewSet(BaseAPIView):
     def create(self, request, *args, **kwargs):
         #permission
         user = self.user
-        if user.verify_permission('add_projectuserwork') == False:
-            return Response("Authentication Required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        user.verify_permission('add_projectuserwork')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)

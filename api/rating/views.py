@@ -17,8 +17,7 @@ class RatingViewSet(BaseAPIView):
     def list(self, request):
         #permission
         user = self.user
-        if user.verify_permission('view_rating') == False:
-            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        user.verify_permission('view_rating')
 
         ratings = Rating.objects.all().values()
         return Response(ratings)
@@ -26,8 +25,7 @@ class RatingViewSet(BaseAPIView):
     def rating(self, request):
         # #permission
         user = self.user
-        if user.verify_permission('add_rating') == False:
-            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        user.verify_permission('add_rating')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
@@ -50,8 +48,7 @@ class LogRatingViewSet(BaseAPIView):
     def list(self, request):
         # #permission
         user = self.user
-        if user.verify_permission('view_lograting') == False:
-            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        user.verify_permission('view_lograting')
 
         user_id_assessor = self.request.query_params.get('user_id_assessor', None)
         user_id_rated = self.request.query_params.get('user_id_rated', None)

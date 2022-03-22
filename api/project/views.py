@@ -5,8 +5,6 @@ from rest_framework.response import Response
 from rest_framework import status
 import orjson
 from django.db.models import F
-from rest_framework.permissions import IsAuthenticated
-# from api.base.authentication import TokenAuthentication
 from api.base.api_view import BaseAPIView
 
 # from api.base.decorator import permission, has_permission
@@ -14,11 +12,9 @@ from api.base.api_view import BaseAPIView
 class ProjectViewSet(BaseAPIView):
 
     def list(self, request):
-        # #permission
+        #permission
         user = self.user
-        if user.verify_permission('view_project') == False:
-            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
-
+        user.verify_permission('view_project')
 
         project_name = self.request.query_params.get('project_name', None)
         description = self.request.query_params.get('description', None)
@@ -41,8 +37,7 @@ class ProjectViewSet(BaseAPIView):
     def create(self, request, *args, **kwargs):
         #permission
         user = self.user
-        if user.verify_permission('add_project') == False:
-            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        user.verify_permission('add_project')
         
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)

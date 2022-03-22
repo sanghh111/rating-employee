@@ -12,9 +12,7 @@ class GroupSkillViewSet(BaseAPIView):
     def list(self, request):
         #permission
         user = self.user
-        if user.verify_permission('view_groupskill') == False:
-            return Response("Authentication Required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
-
+        user.verify_permission('view_groupskill')
 
         group_skills = GroupSkill.objects.all()
         serializer = GroupSkillSerializer(group_skills, many=True)
@@ -24,8 +22,7 @@ class GroupSkillViewSet(BaseAPIView):
     def create(self, request, *args, **kwargs):
         #permission
         user = self.user
-        if user.verify_permission('add_groupskill') == False:
-            return Response("Authentication Required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        user.verify_permission('add_groupskill')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
@@ -47,8 +44,7 @@ class SkillViewSet(BaseAPIView):
     def list(self, request):
         #permission
         user = self.user
-        if user.verify_permission('view_skill') == False:
-            return Response("Authentication Required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        user.verify_permission('view_skill')
 
         skills = Skill.objects.annotate(
                 skill_id = F('id'),
@@ -67,9 +63,8 @@ class SkillViewSet(BaseAPIView):
     def create(self, request, *args, **kwargs):
         #permission
         user = self.user
-        if user.verify_permission('add_groupskill') == False:
-            return Response("Authentication Required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
-
+        user.verify_permission('add_groupskill')
+        
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
         

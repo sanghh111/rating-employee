@@ -12,8 +12,7 @@ class UserSkillDetailViewSet(BaseAPIView):
     def update(self, request, pk):
         # #permission
         user = self.user
-        if user.verify_permission('change_userskill') == False:
-            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        user.verify_permission('change_userskill')
 
         user_skill = UserSkill.objects.get(pk = pk)
         if not user_skill:
@@ -46,8 +45,7 @@ class UserSkillDetailViewSet(BaseAPIView):
     def delete(self, request, pk):
         # #permission
         user = self.user
-        if user.verify_permission('delete_userskill') == False:
-            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        user.verify_permission('delete_userskill')
 
         user_skill = UserSkill.objects.get(pk = pk)
         if not user_skill:

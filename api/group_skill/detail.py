@@ -12,8 +12,7 @@ class GroupSkillDetailViewSet(BaseAPIView):
     def get_detail(self, request, pk):
         #permission
         user = self.user
-        if user.verify_permission('view_groupskill') == False:
-            return Response("Authentication Required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        user.verify_permission('view_groupskill')
 
         group_skill = GroupSkill.objects.get(pk = pk)
 
@@ -25,8 +24,7 @@ class GroupSkillDetailViewSet(BaseAPIView):
     def update(self, request, pk):
         #permission
         user = self.user
-        if user.verify_permission('change_groupskill') == False:
-            return Response("Authentication Required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        user.verify_permission('change_groupskill')
 
         group_skill = GroupSkill.objects.get(pk=pk)
         if group_skill:
@@ -50,8 +48,8 @@ class GroupSkillDetailViewSet(BaseAPIView):
     def delete(self, request, pk):
         #permission
         user = self.user
-        if user.verify_permission('delete_groupskill') == False:
-            return Response("Authentication Required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        user.verify_permission('delete_groupskill')
+
 
         group_skill = GroupSkill.objects.get(pk=pk)
         if group_skill:
@@ -67,8 +65,7 @@ class SkillDetailViewSet(BaseAPIView):
     def get_detail(self, request, pk):
         #permission
         user = self.user
-        if user.verify_permission('view_skill') == False:
-            return Response("Authentication Required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        user.verify_permission('view_skill')
 
         skill = Skill.objects.filter(pk = pk).annotate(
             skill_id = F('id'),
@@ -86,8 +83,7 @@ class SkillDetailViewSet(BaseAPIView):
     def update(self, request, pk):
         #permission
         user = self.user
-        if user.verify_permission('change_skill') == False:
-            return Response("Authentication Required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        user.verify_permission('change_skill')
 
         skill = Skill.objects.filter(pk = pk).first()
         if not skill:
@@ -110,8 +106,7 @@ class SkillDetailViewSet(BaseAPIView):
     def delete(self, request, pk):
         #permission
         user = self.user
-        if user.verify_permission('delete_skill') == False:
-            return Response("Authentication Required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        user.verify_permission('delete_skill')
 
         skill = Skill.objects.filter(pk = pk)
         if not skill:

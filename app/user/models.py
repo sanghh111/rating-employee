@@ -6,12 +6,13 @@ from django.db import models
 from django.contrib.auth.hashers import check_password, make_password
 from django.utils import timezone
 from app.views.models import UserRolePermission
+from rest_framework import status
+from api.base.exception import CustomAPIException
 
 class User(AbstractUser):
     position_role = models.IntegerField(blank=True, null=True)
     
     rank = models.CharField(max_length=100)
-
 
     token = models.CharField(max_length=200, db_column='account_token', blank=True, null=True, verbose_name='Token')
     token_date = models.DateField(db_column='account_token_date', blank=True, null=True, verbose_name=('Token Date'))
@@ -20,10 +21,8 @@ class User(AbstractUser):
                                                 blank=True, null=True)
     account_token_reset_pass_time = models.DateTimeField(db_column='account_token_reset_pass_time',
                                                          blank=True, null=True)
-
     def __str__(self):
         return self.username
-
 
     def save(self, *args, **kwargs):
         if not self.token:
@@ -68,11 +67,11 @@ class User(AbstractUser):
         self.last_login = timezone.now()
         self.save(update_fields=['last_login'])
 
-    def verify_permission(self, codename):
+    def verify_permission(self, codename) -> None:
         if self.is_superuser == False:
-            permission =  UserRolePermission.objects.filter(user_id=self.id, permission_codename=codename).values('permission_codename') 
+            permission = UserRolePermission.objects.filter(user_id=self.id, permission_codename=codename).values('permission_codename')
             if not permission:
-                return False
-        return True
+                raise CustomAPIException(status_code=status.HTTP_401_UNAUTHORIZED, detail = "Authorization required")
+
 
     

@@ -14,8 +14,7 @@ class UserSkillViewSet(BaseAPIView):
     def list(self, request):
         # #permission
         user = self.user
-        if user.verify_permission('view_userskill') == False:
-            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        user.verify_permission('view_userskill')
 
         skill_id = self.request.query_params.get('skill_id', None)
         user_id = self.request.query_params.get('user_id', None)
@@ -50,8 +49,7 @@ class UserSkillViewSet(BaseAPIView):
     def create(self, request, *args, **kwargs):
         # #permission
         user = self.user
-        if user.verify_permission('add_userskill') == False:
-            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        user.verify_permission('add_userskill')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)

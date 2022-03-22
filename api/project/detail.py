@@ -17,11 +17,19 @@ class ProjectDetailViewSet(BaseAPIView):
             raise Http404
 
     def get_detail(self, request, pk):
+        #permission
+        user = self.user
+        user.verify_permission('view_project')
+
         project = self.get_object(pk)
         serializer = ProjectSerializer(project)
         return Response(serializer.data)
 
     def update(self, request, pk, format = None):
+        #permission
+        user = self.user
+        user.verify_permission('change_project')
+
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
         else:
@@ -51,6 +59,10 @@ class ProjectDetailViewSet(BaseAPIView):
         return Response(serializer.data)
     
     def delete(self, request, pk):
+        #permission
+        user = self.user
+        user.verify_permission('delete_project')
+
         project = self.get_object(pk)
         try:
             project.delete()

@@ -11,6 +11,10 @@ from api.base.api_view import BaseAPIView
 
 class ProjecUserWorkDetailViewSet(BaseAPIView):
     def update(self, request, pk):
+        #permission
+        user = self.user
+        user.verify_permission('change_projectuserwork')
+
         project_user_work = ProjectUserWork.objects.get(pk = pk)
         if not project_user_work:
             return Response("not found", status=status.HTTP_404_NOT_FOUND)
@@ -43,6 +47,10 @@ class ProjecUserWorkDetailViewSet(BaseAPIView):
         return Response(serializer.data)
 
     def delete(self, request, pk):
+        #permission
+        user = self.user
+        user.verify_permission('delete_projectuserwork')
+
         project_user_work = ProjectUserWork.objects.get(pk = pk)
         if not project_user_work:
             return Response("not found", status=status.HTTP_404_NOT_FOUND)

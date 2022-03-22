@@ -28,8 +28,6 @@ class BaseAPIView(CustomAPIView):
         super().initial(request, *args, **kwargs)
         self.user = request.user
 
-     
-
 def get_encode_header(request):
     if request:
         client_encode = request.META.get('HTTP_AUTHORIZATION',)

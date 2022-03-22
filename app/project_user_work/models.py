@@ -8,3 +8,5 @@ class ProjectUserWork(models.Model):
     position = models.CharField(max_length=100)
     work = models.CharField(max_length=100)
     achieves = models.CharField(max_length=100)
+    class Meta:
+        db_table = "project_user_work"

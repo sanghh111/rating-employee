@@ -1,13 +1,11 @@
-from distutils.log import Log
 from re import L
 from sys import exec_prefix
 from rest_framework.viewsets import ViewSet
-from .serializers import DetailRatingSerializer, LogRatingSerializer, RatingSerializer
 from app.models import Rating, LogRating, DetailRating, User
 
 from rest_framework.response import Response
 from rest_framework import status
-from django.http import Http404
+
 import orjson
 from django.db.models import F
 import datetime
@@ -15,14 +13,22 @@ from api.base.authentication import TokenAuthentication
 from api.base.api_view import BaseAPIView
 
 class RatingViewSet(BaseAPIView):
-    # authentication_classes = (TokenAuthentication,)
-    # permission_classes = ()
 
     def list(self, request):
+        #permission
+        user = self.user
+        if user.verify_permission('view_rating') == False:
+            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+
         ratings = Rating.objects.all().values()
         return Response(ratings)
 
     def rating(self, request):
+        # #permission
+        user = self.user
+        if user.verify_permission('add_rating') == False:
+            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
         data = orjson.loads(request.body)
@@ -41,10 +47,12 @@ class RatingViewSet(BaseAPIView):
         return Response("Create successfull", status=status.HTTP_201_CREATED)
 
 class LogRatingViewSet(BaseAPIView):
-    # authentication_classes = (TokenAuthentication,)
-    # permission_classes = ()
-
     def list(self, request):
+        # #permission
+        user = self.user
+        if user.verify_permission('view_lograting') == False:
+            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+
         user_id_assessor = self.request.query_params.get('user_id_assessor', None)
         user_id_rated = self.request.query_params.get('user_id_rated', None)
 

@@ -69,8 +69,9 @@ class User(AbstractUser):
         self.save(update_fields=['last_login'])
 
     def verify_permission(self, codename):
-        permission =  UserRolePermission.objects.filter(user_id=self.id, permission_codename=codename).values('permission_codename') 
-        if not permission:
+        if self.is_superuser == False:
+            permission =  UserRolePermission.objects.filter(user_id=self.id, permission_codename=codename).values('permission_codename') 
+            if not permission:
                 return False
         return True
 

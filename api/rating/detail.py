@@ -15,10 +15,13 @@ from api.base.authentication import TokenAuthentication
 from api.base.api_view import BaseAPIView
 
 class DetailRatingViewSet(BaseAPIView):
-    # authentication_classes = (TokenAuthentication,)
-    # permission_classes = ()
 
     def list(self, request):
+        #permission
+        user = self.user
+        if user.verify_permission('view_detailrating') == False:
+            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+
         user_id_assessor = self.request.query_params.get('user_id_assessor', None)
         user_id_rated = self.request.query_params.get('user_id_rated', None)
 
@@ -50,6 +53,11 @@ class DetailRatingViewSet(BaseAPIView):
         return Response(detail_ratings)
 
     def create(self, request, *args, **kwagrs):
+        #permission
+        user = self.user
+        if user.verify_permission('add_detailrating') == False:
+            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
         data = orjson.loads(request.body)
@@ -90,7 +98,13 @@ class DetailRatingViewSet(BaseAPIView):
             return Response("Create successful", status=status.HTTP_201_CREATED)
 
     def update(self, request, pk):
+        #permission
+        user = self.user
+        if user.verify_permission('change_detailrating') == False:
+            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        
         detail_rating = DetailRating.objects.get(pk = pk)
+
         if not detail_rating:
             return Response("Detail rating not found", status=status.HTTP_404_NOT_FOUND)
         
@@ -136,6 +150,10 @@ class DetailRatingViewSet(BaseAPIView):
         return Response(serializer.data)
     
     def delete(self, request, pk):
+        #permission
+        user = self.user
+        if user.verify_permission('delete_detailrating') == False:
+            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
         detail_rating = DetailRating.objects.get(pk = pk)
         if not detail_rating:
             return Response("Detail rating not found", status=status.HTTP_404_NOT_FOUND)

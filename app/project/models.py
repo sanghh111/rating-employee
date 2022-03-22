@@ -6,5 +6,10 @@ class Project(models.Model):
     date_start = models.DateField(null=True)
     date_end = models.DateField(null=True)
     tech_stack = models.CharField(max_length=100, null=True )
+    class Meta:
+        db_table = "project"
+    
     def __str__(self):
         return self.project_name
+
+    

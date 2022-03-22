@@ -10,7 +10,7 @@ class UserRolePermission(models.Model):
 
     class Meta:
         managed = False
-        db_table = "UserRolePermission"
+        db_table = "user_role_permission"
         # indexes = [
         #     models.Index(fields=['username',]),
         #     models.Index(fields=['role_name','permission_codename',]),

@@ -6,8 +6,9 @@ from .project_user_work.models import ProjectUserWork
 from .rating.models import Rating, DetailRating, LogRating
 from .role.models import Role, UserRole
 from .permission.models import Permission, RolePermission
-from django.db import models
 from .views.models import UserRolePermission
+
+from django.db import models
 
 class BaseModel(models.Model):
 

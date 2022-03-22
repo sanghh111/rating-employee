@@ -10,15 +10,23 @@ from api.base.api_view import BaseAPIView
 
 class GroupSkillViewSet(BaseAPIView):
     def list(self, request):
+        #permission
         user = self.user
         if user.verify_permission('view_groupskill') == False:
             return Response("Authentication Required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+
 
         group_skills = GroupSkill.objects.all()
         serializer = GroupSkillSerializer(group_skills, many=True)
         return Response(serializer.data)
 
+
     def create(self, request, *args, **kwargs):
+        #permission
+        user = self.user
+        if user.verify_permission('add_groupskill') == False:
+            return Response("Authentication Required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
         else:
@@ -37,21 +45,31 @@ class GroupSkillViewSet(BaseAPIView):
 
 class SkillViewSet(BaseAPIView):
     def list(self, request):
+        #permission
+        user = self.user
+        if user.verify_permission('view_skill') == False:
+            return Response("Authentication Required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+
         skills = Skill.objects.annotate(
-            skill_id = F('id'),
-            skill_name = F('name'),
-            group_skill_name = F('group_skill_id__group_skill_name'),
-        ).values(
-            'skill_id',
-            'skill_name',
-            'group_skill_name',
-        )
+                skill_id = F('id'),
+                skill_name = F('name'),
+                group_skill_name = F('group_skill_id__group_skill_name'),
+            ).values(
+                'skill_id',
+                'skill_name',
+                'group_skill_name',
+            )
         if not skills:
             return Response("Errol", status=status.HTTP_404_NOT_FOUND)
         return Response(skills)
         
 
     def create(self, request, *args, **kwargs):
+        #permission
+        user = self.user
+        if user.verify_permission('add_groupskill') == False:
+            return Response("Authentication Required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
         

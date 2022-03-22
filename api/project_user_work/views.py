@@ -12,7 +12,11 @@ from api.base.api_view import BaseAPIView
 
 class ProjectUserWorkViewSet(BaseAPIView):
     def list(self, request):
-        
+        # #permission
+        user = self.user
+        if user.verify_permission('view_projectuserwork') == False:
+            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+
         project_user_works = ProjectUserWork.objects.annotate(
             username = F('user_id__username'),
             user_rank = F('user_id__rank'),
@@ -32,6 +36,11 @@ class ProjectUserWorkViewSet(BaseAPIView):
         return Response(project_user_works)
 
     def create(self, request, *args, **kwargs):
+        #permission
+        user = self.user
+        if user.verify_permission('add_projectuserwork') == False:
+            return Response("Authentication Required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
         data = orjson.loads(request.body)

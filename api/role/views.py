@@ -10,10 +10,10 @@ from api.base.api_view import BaseAPIView
 
 class RoleViewSet(BaseAPIView):
     def list(self, request):
-        # # #permission
-        # user = self.user
-        # if user.verify_permission('view_role') == False:
-        #     return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        # #permission
+        user = self.user
+        if user.verify_permission('view_role') == False:
+            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
 
         roles = Role.objects.all()
         serializer = RoleSerializer(roles, many=True)
@@ -31,10 +31,11 @@ class RoleViewSet(BaseAPIView):
 
         name = data.get('name', None)
         description = data.get('description', None)
-
+        priority = data.get ('priority', None)
         role = Role.objects.create(
             name=name,
-            description=description
+            description=description,
+            priority = priority,
         )
 
         if not role:
@@ -43,9 +44,9 @@ class RoleViewSet(BaseAPIView):
 
     def delete(self, request, pk):
         #permission
-        # user = self.user
-        # if user.verify_permission('delete_role') == False:
-        #     return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        user = self.user
+        if user.verify_permission('delete_role') == False:
+            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
 
         role = Role.objects.get(pk=pk)
         if role:

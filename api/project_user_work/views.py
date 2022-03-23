@@ -12,15 +12,14 @@ from api.base.api_view import BaseAPIView
 
 class ProjectUserWorkViewSet(BaseAPIView):
     def list(self, request):
-        # #permission
-        user = self.user
-        user.verify_permission('view_projectuserwork')
+        # permission
+        request.user.verify_permission('view_projectuserwork')
 
         project_user_works = ProjectUserWork.objects.annotate(
-            username = F('user_id__username'),
-            user_rank = F('user_id__rank'),
-            project_name = F('project_id__project_name'),
-            project_tech_stack = F('project_id__tech_stack'),
+            username=F('user_id__username'),
+            user_rank=F('user_id__rank'),
+            project_name=F('project_id__project_name'),
+            project_tech_stack=F('project_id__tech_stack'),
         ).values(
             'id',
             'user_id',
@@ -35,9 +34,9 @@ class ProjectUserWorkViewSet(BaseAPIView):
         return Response(project_user_works)
 
     def create(self, request, *args, **kwargs):
-        #permission
-        user = self.user
-        user.verify_permission('add_projectuserwork')
+        # permission
+        
+        request.user.verify_permission('add_projectuserwork')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
@@ -49,8 +48,8 @@ class ProjectUserWorkViewSet(BaseAPIView):
         work = data.get('work', None)
         achieves = data.get('achieves', None)
 
-        project = Project.objects.get(pk = project_id)
-        user = User.objects.get(pk = user_id)
+        project = Project.objects.filter(pk=project_id).fisrt()
+        user = User.objects.filter(pk=user_id).fisrt()
 
         project_user_work = ProjectUserWork.objects.create(
             project_id = project,

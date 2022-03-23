@@ -15,17 +15,17 @@ from api.base.api_view import BaseAPIView
 class RatingViewSet(BaseAPIView):
 
     def list(self, request):
-        #permission
-        user = self.user
-        user.verify_permission('view_rating')
+        # permission
+        
+        request.user.verify_permission('view_rating')
 
         ratings = Rating.objects.all().values()
         return Response(ratings)
 
     def rating(self, request):
-        # #permission
-        user = self.user
-        user.verify_permission('add_rating')
+        # permission
+        
+        request.user.verify_permission('add_rating')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
@@ -34,7 +34,7 @@ class RatingViewSet(BaseAPIView):
         user_id_rated = data.get("user_id_rated", None)
         session = data.get("session_rating", None)
 
-        user_rated = User.objects.get(pk = user_id_rated)
+        user_rated = User.objects.filter(pk = user_id_rated).first()
 
         rating = Rating.objects.create(
             user_id_rated = user_rated,
@@ -46,9 +46,9 @@ class RatingViewSet(BaseAPIView):
 
 class LogRatingViewSet(BaseAPIView):
     def list(self, request):
-        # #permission
-        user = self.user
-        user.verify_permission('view_lograting')
+        # permission
+        
+        request.user.verify_permission('view_lograting')
 
         user_id_assessor = self.request.query_params.get('user_id_assessor', None)
         user_id_rated = self.request.query_params.get('user_id_rated', None)

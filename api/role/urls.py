@@ -4,5 +4,5 @@ from .views import RoleViewSet
 urlpatterns = [
     path('list/', RoleViewSet.as_view({'get':'list'})),
     path('create/', RoleViewSet.as_view({'post':'create'})),
-    path('delete/<int:pk>/', RoleViewSet.as_view({'delete':'delete'}))
+    path('delete/', RoleViewSet.as_view({'delete':'delete'}))
 ]

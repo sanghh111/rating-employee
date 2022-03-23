@@ -16,11 +16,9 @@ class UserViewSet(ViewSet):
     def create(self, request, *args, **kwargs):
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
-        
         data = orjson.loads(request.body)
-        
-        
-        user_name = data.get("user_name", None)
+
+        username = data.get("username", None)
         password = data.get("password", None)
         first_name = data.get("first_name", None)
         last_name = data.get("last_name", None)
@@ -29,7 +27,7 @@ class UserViewSet(ViewSet):
         rank = data.get("rank", None)
 
         user = User.objects.create(
-            user_name = user_name,
+            username = username,
             password = make_password(password),
             first_name = first_name,
             last_name = last_name,

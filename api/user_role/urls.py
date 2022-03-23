@@ -1,9 +1,9 @@
 from django.urls import path, include
-from .views import RolePermissionViewSet
+from .views import UserRoleViewSet
 
 urlpatterns = [
-    path('list/', RolePermissionViewSet.as_view({'get':'list'})),
-    path('create/', RolePermissionViewSet.as_view({'post':'create'})),
-    path('update/<int:pk>/', RolePermissionViewSet.as_view({'put':'update'})),
-    path('delete/<int:pk>/', RolePermissionViewSet.as_view({'delete':'delete'})),
+    path('list/', UserRoleViewSet.as_view({'get':'list'})),
+    path('create/', UserRoleViewSet.as_view({'post':'create'})),
+    path('update/', UserRoleViewSet.as_view({'put':'update'})),
+    path('delete/', UserRoleViewSet.as_view({'delete':'delete'})),
 ]

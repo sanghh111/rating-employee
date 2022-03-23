@@ -10,39 +10,25 @@ from django.db.models import F
 from api.base.api_view import BaseAPIView
 
 class ProjectDetailViewSet(BaseAPIView):
-    def get_object(self, pk):
-        try:
-            return Project.objects.get(pk=pk)
-        except Project.DoesNotExist:
-            raise Http404
-
-    def get_detail(self, request, pk):
-        #permission
-        user = self.user
-        user.verify_permission('view_project')
-
-        project = self.get_object(pk)
-        serializer = ProjectSerializer(project)
-        return Response(serializer.data)
-
-    def update(self, request, pk, format = None):
-        #permission
-        user = self.user
-        user.verify_permission('change_project')
+    def update(self, request, format = None):
+        # permission
+        request.user.verify_permission('change_project')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
         else:
             data = orjson.loads(request.body)
 
+        id = data.get('id', None)
         project_name = data.get('project_name', None)
         description = data.get('description', None)
         date_start = data.get('date_start', None)
         date_end = data.get('date_end', None)
         tech_stack = data.get('tech_stack', None)    
 
-        project = Project.objects.filter(pk = pk).first()
-
+        project = Project.objects.filter(pk=id).first()
+        if not project:
+            return Response("Project not found", status=status.HTTP_404_NOT_FOUND)
 
         if project_name:
             project.project_name = project_name
@@ -58,12 +44,19 @@ class ProjectDetailViewSet(BaseAPIView):
         serializer = ProjectSerializer(project)
         return Response(serializer.data)
     
-    def delete(self, request, pk):
-        #permission
-        user = self.user
-        user.verify_permission('delete_project')
+    def delete(self, request):
+        # permission
+        request.user.verify_permission('delete_project')
 
-        project = self.get_object(pk)
+        if not request.body:
+            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
+        data = orjson.loads(request.body)
+
+        id = data.get('project_id', None)
+
+        project = Project.objects.filter(pk=id).first()
+        if not project:
+            return Response("Project not found", status=status.HTTP_404_NOT_FOUND)
         try:
             project.delete()
             return Response("Deleted", status=status.HTTP_200_OK)

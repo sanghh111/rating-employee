@@ -10,6 +10,7 @@ urlpatterns = [
     path('user-skill/', include("api.user_skill.urls")),
     path('role/', include("api.role.urls")),
     path('role-permission/', include("api.role_permission.urls")),
+    path('user-role/', include("api.user_role.urls")),
     path('user-role-permission/', include("api.user_role_permission.urls")),
 
 ]

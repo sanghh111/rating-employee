@@ -9,32 +9,20 @@ from django.db.models import F
 from api.base.api_view import BaseAPIView
 
 class GroupSkillDetailViewSet(BaseAPIView):
-    def get_detail(self, request, pk):
-        #permission
-        user = self.user
-        user.verify_permission('view_groupskill')
 
-        group_skill = GroupSkill.objects.get(pk = pk)
+    def update(self, request):
+        # permission
+        request.user.verify_permission('change_groupskill')
 
+        if not request.body:
+            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
+        data = orjson.loads(request.body)
+
+        id = data.get("id", None)
+        group_skill_name = data.get("group_skill_name", None)
+
+        group_skill = GroupSkill.objects.filter(pk=id).first()
         if group_skill:
-            serializer = GroupSkillSerializer(group_skill)
-            return Response(serializer.data)
-        return Response("Errol", status=status.HTTP_404_NOT_FOUND)
-
-    def update(self, request, pk):
-        #permission
-        user = self.user
-        user.verify_permission('change_groupskill')
-
-        group_skill = GroupSkill.objects.get(pk=pk)
-        if group_skill:
-            if not request.body:
-                return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
-            else:
-                data = orjson.loads(request.body)
-
-            group_skill_name = data.get("group_skill_name", None)
-
             if group_skill_name:
                 group_skill.group_skill_name = group_skill_name
 
@@ -45,13 +33,17 @@ class GroupSkillDetailViewSet(BaseAPIView):
         else:
             return Response("Group skill invalid", status=status.HTTP_404_NOT_FOUND)
 
-    def delete(self, request, pk):
-        #permission
-        user = self.user
-        user.verify_permission('delete_groupskill')
+    def delete(self, request):
+        # permission
+        request.user.verify_permission('delete_groupskill')
 
+        if not request.body:
+            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
+        data = orjson.loads(request.body)
 
-        group_skill = GroupSkill.objects.get(pk=pk)
+        id = data.get("id", None)
+
+        group_skill = GroupSkill.objects.filter(pk=id).first()
         if group_skill:
             try:
                 group_skill.delete()
@@ -62,15 +54,20 @@ class GroupSkillDetailViewSet(BaseAPIView):
 
 
 class SkillDetailViewSet(BaseAPIView):
-    def get_detail(self, request, pk):
-        #permission
-        user = self.user
-        user.verify_permission('view_skill')
+    def get_detail(self, request):
+        # permission
+        request.user.verify_permission('view_skill')
 
-        skill = Skill.objects.filter(pk = pk).annotate(
-            skill_id = F('id'),
-            skill_name = F('name'),
-            group_skill_name = F('group_skill_id__group_skill_name'),
+        if not request.body:
+            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
+        data = orjson.loads(request.body)
+
+        skill_id = data.get("skill_id", None)
+
+        skill = Skill.objects.filter(pk = skill_id).annotate(
+            skill_id=F('id'),
+            skill_name=F('name'),
+            group_skill_name=F('group_skill_id__group_skill_name'),
         ).values(
             'skill_id',
             'skill_name',
@@ -80,35 +77,39 @@ class SkillDetailViewSet(BaseAPIView):
             return Response("Errol", status=status.HTTP_404_NOT_FOUND)
         return Response(skill)
     
-    def update(self, request, pk):
-        #permission
-        user = self.user
-        user.verify_permission('change_skill')
-
-        skill = Skill.objects.filter(pk = pk).first()
-        if not skill:
-            return Response("Skill not found", status=status.HTTP_404_NOT_FOUND)
+    def update(self, request):
+        # permission
+        request.user.verify_permission('change_skill')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
         data = orjson.loads(request.body)
 
+        skill_id = data.get("skill_id", None)
         name = data.get("name", None)
         group_skill_id = data.get("group_skill_id", None)
+
+        skill = Skill.objects.filter(pk = skill_id).first()
+        if not skill:
+            return Response("Skill not found", status=status.HTTP_404_NOT_FOUND)
 
         if name:
             skill.name = name
         if group_skill_id:
             skill.group_skill_id = group_skill_id
-
         return Response(skill)
 
-    def delete(self, request, pk):
-        #permission
-        user = self.user
-        user.verify_permission('delete_skill')
+    def delete(self, request):
+        # permission
+        request.user.verify_permission('delete_skill')
 
-        skill = Skill.objects.filter(pk = pk)
+        if not request.body:
+            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
+        data = orjson.loads(request.body)
+
+        skill_id = data.get("skill_id", None)
+
+        skill = Skill.objects.filter(pk=skill_id).first()
         if not skill:
             return Response("Skill not found", status=status.HTTP_404_NOT_FOUND)
         try:

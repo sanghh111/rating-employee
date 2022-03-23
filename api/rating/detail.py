@@ -17,10 +17,8 @@ from api.base.api_view import BaseAPIView
 class DetailRatingViewSet(BaseAPIView):
 
     def list(self, request):
-        #permission
-        user = self.user
-        if user.verify_permission('view_detailrating') == False:
-            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        # permission
+        request.user.verify_permission('view_detailrating')
 
         user_id_assessor = self.request.query_params.get('user_id_assessor', None)
         user_id_rated = self.request.query_params.get('user_id_rated', None)
@@ -53,10 +51,8 @@ class DetailRatingViewSet(BaseAPIView):
         return Response(detail_ratings)
 
     def create(self, request, *args, **kwagrs):
-        #permission
-        user = self.user
-        if user.verify_permission('add_detailrating') == False:
-            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        # permission
+        request.user.verify_permission('add_detailrating')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
@@ -67,12 +63,12 @@ class DetailRatingViewSet(BaseAPIView):
         description = data.get("description", None)
         score = data.get("score", None)
 
-        user_assessor = User.objects.get(pk = user_assessor_id)
+        user_assessor = User.objects.filter(pk = user_assessor_id).first()
         rating = Rating.objects.filter(pk = rating_id).first()
         
         #Get user rated
         user_rated= rating.user_id_rated
-        #user_rated = User.objects.get(pk = user_rated_id)
+        #user_rated = User.objects.filter(pk = user_rated_id)
 
         #Create DetailRating
         detail_rating = DetailRating.objects.create(
@@ -97,28 +93,27 @@ class DetailRatingViewSet(BaseAPIView):
             )
             return Response("Create successful", status=status.HTTP_201_CREATED)
 
-    def update(self, request, pk):
-        #permission
-        user = self.user
-        if user.verify_permission('change_detailrating') == False:
-            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
-        
-        detail_rating = DetailRating.objects.get(pk = pk)
+    def update(self, request):
+        # permission
+        request.user.verify_permission('change_detailrating')
 
-        if not detail_rating:
-            return Response("Detail rating not found", status=status.HTTP_404_NOT_FOUND)
-        
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
         data = orjson.loads(request.body)
 
+        detail_rating_id = data.get("detail_rating_id", None)
         user_assessor_id = data.get("user_id_assessor", None)
         rating_id = data.get("rating_id", None)
         description = data.get("description", None)
         score = data.get("score", None)
 
-        user_assessor = User.objects.get(pk = user_assessor_id)
-        rating = Rating.objects.get(pk = rating_id)
+        detail_rating = DetailRating.objects.filter(pk=detail_rating_id).first()
+
+        if not detail_rating:
+            return Response("Detail rating not found", status=status.HTTP_404_NOT_FOUND)
+
+        user_assessor = User.objects.filter(pk=user_assessor_id).first()
+        rating = Rating.objects.filter(pk=rating_id).first()
 
         #update
         if user_assessor:
@@ -133,7 +128,6 @@ class DetailRatingViewSet(BaseAPIView):
 
         #get user rated
         user_rated = rating.user_id_rated
-       
 
         #create log
         LogRating.objects.create(
@@ -149,12 +143,17 @@ class DetailRatingViewSet(BaseAPIView):
         serializer = DetailRatingSerializer(detail_rating)
         return Response(serializer.data)
     
-    def delete(self, request, pk):
-        #permission
-        user = self.user
-        if user.verify_permission('delete_detailrating') == False:
-            return Response("Authentication required", status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
-        detail_rating = DetailRating.objects.get(pk = pk)
+    def delete(self, request):
+        # permission
+        request.user.verify_permission('delete_detailrating')
+
+        if not request.body:
+            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
+        data = orjson.loads(request.body)
+
+        detail_rating_id = data.get("detail_rating_id", None)
+
+        detail_rating = DetailRating.objects.filter(pk=detail_rating_id).first()
         if not detail_rating:
             return Response("Detail rating not found", status=status.HTTP_404_NOT_FOUND)
 

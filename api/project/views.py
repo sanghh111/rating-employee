@@ -12,32 +12,31 @@ from api.base.api_view import BaseAPIView
 class ProjectViewSet(BaseAPIView):
 
     def list(self, request):
-        #permission
-        user = self.user
-        user.verify_permission('view_project')
+        # permission
+        request.request.user.verify_permission('view_project')
 
+        project_id = self.request.query_params.get('id', None)
         project_name = self.request.query_params.get('project_name', None)
         description = self.request.query_params.get('description', None)
         tech_stack = self.request.query_params.get('tech_stack', None)
 
         projects = Project.objects.all()
-
+        if project_id:
+            projects = projects.filter(id=project_id)
         if project_name:
-            projects = projects.filter(project_name__contains = project_name)
+            projects = projects.filter(project_name__contains=project_name)
         if description:
-            projects = projects.filter(description__contains = description)
+            projects = projects.filter(description__contains=description)
         if tech_stack:
-            projects = projects.filter(tech_stack__contains = tech_stack)
-
+            projects = projects.filter(tech_stack__contains=tech_stack)
 
         serializer = ProjectSerializer(projects, many=True)
 
         return Response(serializer.data)
   
     def create(self, request, *args, **kwargs):
-        #permission
-        user = self.user
-        user.verify_permission('add_project')
+        # permission
+        request.user.verify_permission('add_project')
         
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)

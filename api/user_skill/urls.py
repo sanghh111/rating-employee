@@ -5,7 +5,6 @@ from .detail import UserSkillDetailViewSet
 urlpatterns = [
     path('list/', UserSkillViewSet.as_view({'get':'list'})),
     path('create/', UserSkillViewSet.as_view({'post':'create'})),
-
-    path('update/<int:pk>/', UserSkillDetailViewSet.as_view({'put':'update'})),
-    path('delete/<int:pk>/', UserSkillDetailViewSet.as_view({'delete':'delete'}))
+    path('update/', UserSkillDetailViewSet.as_view({'put':'update'})),
+    path('delete/', UserSkillDetailViewSet.as_view({'delete':'delete'}))
 ]

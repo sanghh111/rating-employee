@@ -4,6 +4,6 @@ from .views import RolePermissionViewSet
 urlpatterns = [
     path('list/', RolePermissionViewSet.as_view({'get':'list'})),
     path('create/', RolePermissionViewSet.as_view({'post':'create'})),
-    path('update/<int:pk>/', RolePermissionViewSet.as_view({'put':'update'})),
-    path('delete/<int:pk>/', RolePermissionViewSet.as_view({'delete':'delete'})),
+    path('update/', RolePermissionViewSet.as_view({'put':'update'})),
+    path('delete/', RolePermissionViewSet.as_view({'delete':'delete'})),
 ]

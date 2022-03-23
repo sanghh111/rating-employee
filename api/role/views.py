@@ -10,18 +10,15 @@ from api.base.api_view import BaseAPIView
 
 class RoleViewSet(BaseAPIView):
     def list(self, request):
-        # #permission
-        user = self.user
-        user.verify_permission('view_role')
-
+        # permission
+        request.user.verify_permission('view_role')
         roles = Role.objects.all()
         serializer = RoleSerializer(roles, many=True)
         return Response(serializer.data)
     
     def create(self, request):
-        #permission
-        user = self.user
-        user.verify_permission('add_role')
+        # permission
+        request.user.verify_permission('add_role')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
@@ -29,7 +26,7 @@ class RoleViewSet(BaseAPIView):
 
         name = data.get('name', None)
         description = data.get('description', None)
-        priority = data.get ('priority', None)
+        priority = data.get('priority', None)
         role = Role.objects.create(
             name=name,
             description=description,
@@ -40,12 +37,17 @@ class RoleViewSet(BaseAPIView):
             return Response("Errol", status=status.HTTP_400_BAD_REQUEST)
         return Response("Create successful", status=status.HTTP_201_CREATED)
 
-    def delete(self, request, pk):
-        #permission
-        user = self.user
-        user.verify_permission('delete_role')
+    def delete(self, request):
+        # permission
+        request.user.verify_permission('delete_role')
 
-        role = Role.objects.get(pk=pk)
+        if not request.body:
+            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
+        data = orjson.loads(request.body)
+
+        role_id = data.get("role_id", None)
+        role = Role.objects.filter(pk=role_id).first()
+
         if role:
             try:
                 role.delete()

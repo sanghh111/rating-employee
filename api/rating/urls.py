@@ -8,8 +8,8 @@ urlpatterns = [
 
     path('detail-rating/list/', DetailRatingViewSet.as_view({'get':'list'})),
     path('detail-rating/create/', DetailRatingViewSet.as_view({'post':'create'})),
-    path('detail-rating/update/<int:pk>/', DetailRatingViewSet.as_view({'put':'update'})),
-    path('detail-rating/delete/<int:pk>/', DetailRatingViewSet.as_view({'delete':'delete'})),
+    path('detail-rating/update/', DetailRatingViewSet.as_view({'put':'update'})),
+    path('detail-rating/delete/', DetailRatingViewSet.as_view({'delete':'delete'})),
 
     path('log-rating/list/', LogRatingViewSet.as_view({'get':'list'}))
 ]

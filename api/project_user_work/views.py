@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ViewSet
-from app.models import Project, ProjectUserWork, User
+from core.models import Project, ProjectUserWork, User
 from .serializers import ProjectUserWorkSerializer
 
 from rest_framework.response import Response

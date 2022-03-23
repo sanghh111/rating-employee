@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ViewSet
 from .serializers import UserSerializer
-from app.models import User
+from core.models import User
 from django.contrib.auth.hashers import make_password
 from rest_framework.response import Response
 from rest_framework import status

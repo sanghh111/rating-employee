@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ViewSet
 from .serializers import UserSkillSerializer
-from app.models import UserSkill, Skill, User
+from core.models import UserSkill, Skill, User
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,7 +12,6 @@ from api.base.api_view import BaseAPIView
 class UserSkillViewSet(BaseAPIView):
     def list(self, request):
         # permission
-        
         request.user.verify_permission('view_userskill')
 
         skill_id = self.request.query_params.get('skill_id', None)

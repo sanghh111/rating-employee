@@ -1,5 +1,5 @@
 from .serializers import RolePermissionSerializer
-from app.models import RolePermission, Role, Permission
+from core.models import RolePermission, Role, Permission
 
 from rest_framework.response import Response
 from rest_framework import status

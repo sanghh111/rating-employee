@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ViewSet
-from app.project.models import Project
+from core.project.models import Project
 from .serializers import ProjectSerializer
 
 from rest_framework.response import Response

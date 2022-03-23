@@ -1,6 +1,6 @@
 from api.base.api_view import BaseAPIView
 from .serializers import UserSerializer
-from app.models import User
+from core.models import User
 from django.contrib.auth.hashers import make_password
 from rest_framework.response import Response
 from rest_framework import status

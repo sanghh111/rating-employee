@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ViewSet
-from app.project.models import Project
+from core.project.models import Project
 from .serializers import ProjectSerializer
 from rest_framework.response import Response
 from rest_framework import status
@@ -13,7 +13,7 @@ class ProjectViewSet(BaseAPIView):
 
     def list(self, request):
         # permission
-        request.request.user.verify_permission('view_project')
+        request.user.verify_permission('view_project')
 
         project_id = self.request.query_params.get('id', None)
         project_name = self.request.query_params.get('project_name', None)

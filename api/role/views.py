@@ -1,5 +1,5 @@
 from .serializers import RoleSerializer
-from app.models import Role
+from core.models import Role
 
 from rest_framework.response import Response
 from rest_framework import status

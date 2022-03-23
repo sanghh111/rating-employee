@@ -5,7 +5,7 @@ from django.http import Http404
 import orjson
 from django.db.models import F
 from api.base.api_view import BaseAPIView
-from app.views.models import UserRolePermission
+from core.views.models import UserRolePermission
 
 class UserRolePermissionViewSet(BaseAPIView):
     def list(self, request):

@@ -1,13 +1,13 @@
 
 from .serializers import UserSkillSerializer
-from app.models import UserSkill, Skill, User
+from core.models import UserSkill, Skill, User
 
 from rest_framework.response import Response
 from rest_framework import status
 import orjson
 from django.db.models import F
 from api.base.api_view import BaseAPIView
-from app.views.models import UserRolePermission
+from core.views.models import UserRolePermission
 class UserSkillDetailViewSet(BaseAPIView):
     def update(self, request):
         # permission

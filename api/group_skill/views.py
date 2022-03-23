@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ViewSet
-from app.models import GroupSkill, Skill
+from core.models import GroupSkill, Skill
 from .serializers import GroupSkillSerializer, SkillSerializer
 from rest_framework.response import Response
 from rest_framework import status

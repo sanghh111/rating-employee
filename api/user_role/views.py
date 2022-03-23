@@ -1,4 +1,4 @@
-from app.models import UserRole, User, Role
+from core.models import UserRole, User, Role
 from rest_framework.response import Response
 from rest_framework import status
 import orjson

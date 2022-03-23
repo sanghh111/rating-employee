@@ -1,6 +1,6 @@
 from django.urls import path, include
 
-app_name = 'app'
+app_name = 'core'
 urlpatterns = [
     path('group-skill/', include("api.group_skill.urls")),
     path('project/', include("api.project.urls")),

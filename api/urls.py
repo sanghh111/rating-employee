@@ -12,5 +12,4 @@ urlpatterns = [
     path('role-permission/', include("api.role_permission.urls")),
     path('user-role/', include("api.user_role.urls")),
     path('user-role-permission/', include("api.user_role_permission.urls")),
-
 ]

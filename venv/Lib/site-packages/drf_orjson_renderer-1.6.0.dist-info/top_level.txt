@@ -1,0 +1,1 @@
+drf_orjson_renderer

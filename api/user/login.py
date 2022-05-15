@@ -11,6 +11,7 @@ class UserLoginViewSet(ViewSet):
     permission_classes = ()
 
     def post(self, request):
+
         user = request.user
         context = {}
         context.update({

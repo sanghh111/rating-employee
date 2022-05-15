@@ -9,8 +9,12 @@ import orjson
 from django.db.models import F
 
 class UserViewSet(ViewSet):
+
+
     def list(self, request):
+
         users = User.objects.all().values()
+        
         return Response(users)
     
     def create(self, request, *args, **kwargs):

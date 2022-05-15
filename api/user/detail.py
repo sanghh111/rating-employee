@@ -9,6 +9,7 @@ import orjson
 from django.db.models import F
 
 class UserDetailViewSet(BaseAPIView):
+    
     def reset_password(self, request, *args, **kwargs):
         #request.user.verify_permission("reset_password")
         if not request.body:

@@ -8,14 +8,19 @@ from django.http import Http404
 import orjson
 from django.db.models import F
 
+
+
+
 class UserViewSet(ViewSet):
 
+    
 
     def list(self, request):
 
         users = User.objects.all().values()
+        data  = UserSerializer(users, many = True).data
         
-        return Response(users)
+        return Response(data)
     
     def create(self, request, *args, **kwargs):
         if not request.body:

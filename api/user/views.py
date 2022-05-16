@@ -7,20 +7,17 @@ from rest_framework import status
 from django.http import Http404
 import orjson
 from django.db.models import F
+from rest_framework.viewsets import ModelViewSet
 
 
 
+class UserViewSet(ModelViewSet):
 
-class UserViewSet(ViewSet):
+    lookup_field = User.objects.all()
 
-    
+    serializer_class = UserSerializer
 
-    def list(self, request):
 
-        users = User.objects.all().values()
-        data  = UserSerializer(users, many = True).data
-        
-        return Response(data)
     
     def create(self, request, *args, **kwargs):
         if not request.body:

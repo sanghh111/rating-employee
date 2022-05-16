@@ -13,12 +13,11 @@ class UserLoginViewSet(ViewSet):
     def post(self, request):
 
         user = request.user
-        context = {}
-        context.update({
+        context = {
             'user_id': user.id,
             'token': user.get_key,
             'username': user.username,
-        })
+        }
         user = user.update_last_login
         return Response(context)
 

@@ -1,4 +1,4 @@
-from rest_framework.permissions import BasePermission,DjangoModelPermissions
+from rest_framework.permissions import DjangoModelPermissions
 
 class IsManagerUser(DjangoModelPermissions):
 

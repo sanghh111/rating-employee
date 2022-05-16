@@ -7,11 +7,16 @@ from django.http import Http404
 import orjson
 from django.db.models import F
 from api.base.api_view import BaseAPIView
-
+from api.base.permissions import IsManagerUser
 class GroupSkillViewSet(BaseAPIView):
+
+    permission_classes = [IsManagerUser]
+
     def list(self, request):
         # permission
-        request.user.verify_permission('view_groupskill')
+        # request.user.verify_permission('view_groupskill')
+
+
 
         group_skill_id = self.request.query_params.get("id", None)
         group_skill_name = self.request.query_params.get("name", None)
@@ -28,7 +33,7 @@ class GroupSkillViewSet(BaseAPIView):
 
     def create(self, request, *args, **kwargs):
         # permission
-        request.user.verify_permission('add_groupskill')
+        # request.user.verify_permission('add_groupskill')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
@@ -49,7 +54,7 @@ class GroupSkillViewSet(BaseAPIView):
 class SkillViewSet(BaseAPIView):
     def list(self, request):
         # permission
-        request.user.verify_permission('view_skill')
+        # request.user.verify_permission('view_skill')
 
         skills = Skill.objects.annotate(
                 skill_id = F('id'),
@@ -67,7 +72,7 @@ class SkillViewSet(BaseAPIView):
 
     def create(self, request, *args, **kwargs):
         # permission
-        request.user.verify_permission('add_groupskill')
+        # request.user.verify_permission('add_groupskill')
         
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)

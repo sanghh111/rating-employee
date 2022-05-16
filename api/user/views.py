@@ -16,8 +16,8 @@ from rest_framework.permissions import IsAuthenticated
 
 class UserViewSet(ModelViewSet):
 
+    queryset =  User.objects.all()
 
-    lookup_field = User.objects.all()
 
     serializer_class = UserSerializer
 
@@ -31,7 +31,7 @@ class UserViewSet(ModelViewSet):
 
     #config method create
     def create(self, request, *args, **kwargs):
-        if not request.body:
+        if request.body:
             
             data   = orjson.loads(request.body)
 
@@ -49,7 +49,7 @@ class UserViewSet(ModelViewSet):
 
     #Update Profile User
     def update(self, request, *args, **kwargs):
-        if not request.body :
+        if  request.body :
             data = orjson.loads(request.body)
             try: 
                 if data['password']:
@@ -86,24 +86,45 @@ class UserViewSet(ModelViewSet):
         else:
             return Response('No data',status= status.HTTP_400_BAD_REQUEST)
 
-    """
-    action to int : exact, iexact, gt , gte, lt,lte
-    action to string : exact,iexact, startwith, endwith, istartwith, iendwith
-    action to list : contains,icontains
-    aciton to annotate : annotate 
-    action 'exact, iexact, contains, icontains, gt, gte, lt, lte'
-    
-    {
-        [{
-            'name' : {
-                'atribue' : 'a'
-                'action': exact
-            } 
-        },
 
-    }
-    """
+
 
 
     def find_user(self,request,*args, **kwargs):
+        """
+        action to int : exact, iexact, gt , gte, lt,lte
+        action to string : exact,iexact, startwith, endwith, istartwith, iendwith
+        action to list : contains,icontains
+        aciton to annotate : annotate 
+        action 'exact, iexact, contains, icontains, gt, gte, lt, lte'
+        
+        {
+            [{
+                'name' : {
+                    'atribue' : 'a'
+                    'action': exact
+                } 
+            },
+
+        }
+        """
+
+
         pass
+
+    def delete_user(self,request,*args,**kwargs):
+        if request.body:
+            data = orjson.loads(request.body)
+            try:
+                user = User.objects.get(**data)
+                user.delete()
+                return Response(
+                    data = {
+                        'message' :  'delete success'
+                    },
+                    status= status.HTTP_200_OK
+                )
+            except User.DoesNotExist:
+                return Response('Not found', status=status.HTTP_404_NOT_FOUND)  
+        else : 
+            return Response('no_data',status= status.HTTP_400_BAD_REQUEST)

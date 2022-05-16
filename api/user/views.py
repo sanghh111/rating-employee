@@ -85,3 +85,25 @@ class UserViewSet(ModelViewSet):
                 return Response(serializer.data)
         else:
             return Response('No data',status= status.HTTP_400_BAD_REQUEST)
+
+    """
+    action to int : exact, iexact, gt , gte, lt,lte
+    action to string : exact,iexact, startwith, endwith, istartwith, iendwith
+    action to list : contains,icontains
+    aciton to annotate : annotate 
+    action 'exact, iexact, contains, icontains, gt, gte, lt, lte'
+    
+    {
+        [{
+            'name' : {
+                'atribue' : 'a'
+                'action': exact
+            } 
+        },
+
+    }
+    """
+
+
+    def find_user(self,request,*args, **kwargs):
+        pass

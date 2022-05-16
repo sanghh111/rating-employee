@@ -1,3 +1,5 @@
+from datetime import datetime
+from venv import create
 from rest_framework.viewsets import ViewSet
 from .serializers import UserSerializer
 from core.models import User
@@ -8,41 +10,40 @@ from django.http import Http404
 import orjson
 from django.db.models import F
 from rest_framework.viewsets import ModelViewSet
-
-
+from ..base.permissions import IsManagerUser
+from rest_framework.permissions import IsAuthenticated
 
 class UserViewSet(ModelViewSet):
+
 
     lookup_field = User.objects.all()
 
     serializer_class = UserSerializer
 
+    #override get_permission
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsManagerUser]
+        return [permission() for permission in permission_classes]
 
-    
+    #config method create
     def create(self, request, *args, **kwargs):
         if not request.body:
-            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
-        data = orjson.loads(request.body)
+            
+            data   = orjson.loads(request.body)
 
-        username = data.get("username", None)
-        password = data.get("password", None)
-        first_name = data.get("first_name", None)
-        last_name = data.get("last_name", None)
-        email = data.get("email", None)
-        position_role = data.get("position_role", None)
-        rank = data.get("rank", None)
+            data['password'] = make_password(data['password'])
+            data.update(
+                create_at = datetime.now(),
+                create_by = request.user.id
+            )
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
 
-        user = User.objects.create(
-            username = username,
-            password = make_password(password),
-            first_name = first_name,
-            last_name = last_name,
-            email = email,
-            position_role = position_role,
-            rank = rank,
-        )
-        user.save()
 
-        if not user:
-            return Response("Errol", status=status.HTTP_400_BAD_REQUEST)
-        return Response("Successful", status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    

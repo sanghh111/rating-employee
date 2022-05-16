@@ -5,13 +5,13 @@ from rest_framework import serializers
 class BasicSerializer(serializers.Serializer):
     
     
-    def create(self,object, validated_data):
+    def create(self, validated_data):
         
         
         pass
 
 
-    def update(self, object, instance, validated_data):
+    def update(self, instance, validated_data):
         
         
         pass

@@ -17,9 +17,16 @@ from api.user.serializers import UserSerializer
 #     # 'confirm_password' : '123',
 #     'first_name' : 'Nguyen'
     
-# }
-user =  User.objects.get(username = 'admin')
+# # }
+# user =  User.objects.get(username = 'admin')
 
-data =  UserSerializer(user)
+# data =  UserSerializer(user)
 
-print(data.data)
+# print(data.data)
+
+
+a = {
+    'n' :12
+}
+
+a['b']

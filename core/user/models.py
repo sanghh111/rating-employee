@@ -8,7 +8,7 @@ from django.utils import timezone
 from core.views.models import UserRolePermission
 from rest_framework import status
 from api.base.exception import CustomAPIException
-
+from core.permission.models import RolePermission
 class User(AbstractUser):
     position_role = models.IntegerField(blank=True, null=True)
     
@@ -77,13 +77,19 @@ class User(AbstractUser):
         self.last_login = timezone.now()
         self.save(update_fields=['last_login'])
 
-    def verify_permission(self, codename) -> None:
+    def verify_permission(self, codename) :
         if self.is_superuser == False:
             permission = UserRolePermission.objects.filter(user_id=self.id, permission_codename=codename).values('permission_codename')
             if not permission:
                 raise CustomAPIException(status_code=status.HTTP_401_UNAUTHORIZED, detail = "Authorization required")
 
 
-
-
-    
+    def role_is_active(self, codename) :
+        print('codename: ', codename)
+        try:
+            RolePermission.objects.annotate(user = models.F('role_id__role_id__user_id'),
+                                            codename = models.F('permission_id__codename')).get(user = self.id,
+                                                                                            codename = codename[0])
+            return True
+        except RolePermission.DoesNotExist:
+            return False

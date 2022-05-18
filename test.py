@@ -7,9 +7,9 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'rating_employee.settings')
 
 django.setup()
 
-from core.user.models import User
+from core.user.models import User,RolePermission
 from api.user.serializers import UserSerializer
-
+from django.db import models
 
 # dict_user = {
 #     'username' : 'sangh',
@@ -25,8 +25,12 @@ from api.user.serializers import UserSerializer
 # print(data.data)
 
 
-a = {
-    'n' :12
-}
+a = RolePermission.objects.annotate(user = models.F('role_id__role_id__user_id'),
+                                            codename = models.F('permission_id__codename')).get(user =2,
+                                                                                            codename = 'add_user')
 
-a['b']
+print(a)
+
+# for i in a:
+    
+#     print(i.codename)

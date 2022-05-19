@@ -23,7 +23,8 @@ class CustomAPIView(GenericViewSet):
         self.CLIENT_ENCODE = get_encode_header(request)
         if not self.CLIENT_ENCODE:
             self.renderer_classes = (ORJSONRenderer,)
-
+        # super().initial(self, request, *args, **kwargs)
+        self.check_permissions(request)
 
 class BaseAPIView(CustomAPIView):
     def initial(self, request, *args, **kwargs):

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from ..serializers import BasicSerializer
-from ..role.serializers import RoleSerializer
+from api.role.serializers import RoleSerializer
 from ..serializers import PermissionSerializer
 
 class RolePermissionSerializer(BasicSerializer):

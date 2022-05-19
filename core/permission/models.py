@@ -34,4 +34,5 @@ class UserPermission(models.Model):
     updated_by = models.CharField(max_length=100, db_column='modified_by', blank=True, null=True, default='',
                                   verbose_name=('Updated by'))
     
-    pass
+    class Meta:
+        db_table = "user_permission"

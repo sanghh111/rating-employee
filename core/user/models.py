@@ -8,7 +8,7 @@ from django.utils import timezone
 from core.views.models import UserRolePermission
 from rest_framework import status
 from api.base.exception import CustomAPIException
-from core.permission.models import RolePermission
+from core.permission.models import RolePermission, UserPermission
 class User(AbstractUser):
     position_role = models.IntegerField(blank=True, null=True)
     
@@ -85,11 +85,20 @@ class User(AbstractUser):
 
 
     def role_is_active(self, codename) :
-        print('codename: ', codename)
         try:
             RolePermission.objects.annotate(user = models.F('role_id__role_id__user_id'),
                                             codename = models.F('permission_id__codename')).get(user = self.id,
                                                                                             codename = codename[0])
             return True
         except RolePermission.DoesNotExist:
+            return False
+
+
+    def user_is_active(self, codename) : 
+        try:
+            UserPermission.objects.annotate(codename = models.F('permission_id__codename')).get(user = self.id,
+                                                                                                codename = codename)
+
+            return True
+        except UserPermission.DoesNotExist:
             return False

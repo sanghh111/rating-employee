@@ -1,6 +1,6 @@
 from rest_framework.permissions import DjangoModelPermissions
 
-class IsManagerUser(DjangoModelPermissions):
+class IsActiveUser(DjangoModelPermissions):
 
     """
     allow access user Manager or higher or role user have access 

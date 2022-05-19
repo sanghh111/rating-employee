@@ -11,7 +11,7 @@ from django.http import Http404
 import orjson
 from django.db.models import F
 from rest_framework.viewsets import ModelViewSet
-from ..base.permissions import IsManagerUser
+from ..base.permissions import IsActiveUser
 from rest_framework.permissions import IsAuthenticated
 
 class UserViewSet(ModelViewSet):
@@ -26,7 +26,7 @@ class UserViewSet(ModelViewSet):
         if self.action == 'list' and self.action == 'update':
             permission_classes = [IsAuthenticated]
         else:
-            permission_classes = [IsManagerUser]
+            permission_classes = [IsActiveUser]
         return [permission() for permission in permission_classes]
 
     #config method create
@@ -40,7 +40,7 @@ class UserViewSet(ModelViewSet):
                 create_at = datetime.now(),
                 create_by = request.user.id
             )
-            serializer = self.get_serializer(data=request.data)
+            serializer = self.get_serializer(data=data)
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
             return Response(serializer.data, status=status.HTTP_201_CREATED)

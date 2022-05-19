@@ -7,10 +7,10 @@ from django.http import Http404
 import orjson
 from django.db.models import F
 from api.base.api_view import BaseAPIView
-from api.base.permissions import IsManagerUser
+from api.base.permissions import IsActiveUser
 class GroupSkillViewSet(BaseAPIView):
 
-    permission_classes = [IsManagerUser]
+    permission_classes = [IsActiveUser]
 
     def list(self, request):
         # permission
@@ -53,8 +53,6 @@ class GroupSkillViewSet(BaseAPIView):
 
 class SkillViewSet(BaseAPIView):
     def list(self, request):
-        # permission
-        # request.user.verify_permission('view_skill')
 
         skills = Skill.objects.annotate(
                 skill_id = F('id'),

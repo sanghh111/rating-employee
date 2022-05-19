@@ -6,3 +6,4 @@ class PermissionSerializer(BasicSerializer):
     content_type_id = serializers.IntegerField(read_only=True, required=False)
     codename = serializers.CharField(max_length=100)
     name = serializers.CharField(max_length=100)
+

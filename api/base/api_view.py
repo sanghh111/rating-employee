@@ -1,14 +1,16 @@
-from rest_framework.permissions import IsAuthenticated
-from api.base.authentication import TokenAuthentication
-from rest_framework.viewsets import ModelViewSet
+from typing import Generic
+# from rest_framework.permissions import IsAuthenticated
+# from api.base.authentication import TokenAuthentication
+from .permissions import IsActiveUser
+from rest_framework.viewsets import GenericViewSet
 from rest_framework.exceptions import ErrorDetail
 from drf_orjson_renderer.renderers import \
     ORJSONRenderer as OriginalORJSONRenderer
 import orjson
 
-class CustomAPIView(ModelViewSet):
+class CustomAPIView(GenericViewSet):
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = 
+    permission_classes = [IsActiveUser]
     #serializer_class = EmptyRequestSerializer
 
     def __init__(self, **kwargs):

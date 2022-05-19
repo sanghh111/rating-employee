@@ -7,5 +7,5 @@ urlpatterns = [
     path('create/', UserViewSet.as_view({'post':'create'})),
     path('list/', UserViewSet.as_view({'get':'list'})),
     path('login/', UserLoginViewSet.as_view({'post':'post'})),
-    path('reset-password/', UserDetailViewSet.as_view({'post':'reset_password'})),
+    path('reset-password/', UserDetailViewSet.as_view({'put':'reset_password'})),
 ]

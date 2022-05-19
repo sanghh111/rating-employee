@@ -29,4 +29,4 @@ class IsActiveUser(DjangoModelPermissions):
         queryset = self._queryset(view)
         perms = self.get_required_permissions(request.method, queryset.model)
 
-        return bool(request.user.role_is_active(perms) or request.user.is_superuser )
+        return bool(request.user.role_is_active(perms) or request.user.is_superuser or request.user.user_is_active(perms) )

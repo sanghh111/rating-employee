@@ -8,6 +8,9 @@ from api.base.api_view import BaseAPIView
 from core.views.models import UserRolePermission
 
 class UserRolePermissionViewSet(BaseAPIView):
+
+    queryset = UserRolePermission()
+
     def list(self, request):
         permissions = UserRolePermission.objects.all().values('permission_codename')
         permissions = list(permissions)

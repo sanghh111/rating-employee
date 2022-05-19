@@ -1,9 +1,7 @@
-from django.urls import path, include
-from .views import ProjectViewSet
-from .detail import ProjectDetailViewSet
+from django.urls import path , include
+
 urlpatterns = [
-    path('list/', ProjectViewSet.as_view({'get':'list'})),
-    path('create/', ProjectViewSet.as_view({'post':'create'})),
-    path('detail/update/', ProjectDetailViewSet.as_view({'put':'update'})),
-    path('detail/delete/', ProjectDetailViewSet.as_view({'delete':'delete'}))
+    # path('',include('user.urls'),
+    path('manager/',include('api.project.manager.urls'))
+    
 ]

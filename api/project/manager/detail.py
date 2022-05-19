@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ViewSet
 from core.project.models import Project
-from .serializers import ProjectSerializer
+from ..serializers import ProjectSerializer
 
 from rest_framework.response import Response
 from rest_framework import status

@@ -10,9 +10,11 @@ from api.base.api_view import BaseAPIView
 
 from django.forms.models import model_to_dict
 class RolePermissionViewSet(BaseAPIView):
-    def list (self, request):
+
+    queryset = RolePermission.objects.all()
+
+    def list (self, request, *args, **kwargs):
         # permission
-        request.user.verify_permission('view_rolepermission')
 
         #get data
         role_id = self.request.query_params.get('role_id', None)
@@ -34,15 +36,14 @@ class RolePermissionViewSet(BaseAPIView):
         )
         
         if role_id:
-            role_permissions = role_permissions.filter(role_id == role_id)
+            role_permissions = role_permissions.filter(role_id = role_id)
         if permission_id:
-            role_permissions = role_permissions.filter(permission_id == permission_id)
+            role_permissions = role_permissions.filter(permission_id = permission_id)
         
-        return Response(role_permissions)
+        return Response(role_permissions,200)
 
     def create(self, request):
         # permission
-        request.user.verify_permission('add_rolepermission')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
@@ -65,7 +66,6 @@ class RolePermissionViewSet(BaseAPIView):
 
     def update(self, request):
         # permission
-        request.user.verify_permission('change_rolepermission')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)

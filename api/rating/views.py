@@ -14,6 +14,8 @@ from api.base.api_view import BaseAPIView
 
 class RatingViewSet(BaseAPIView):
 
+    queryset = Rating.objects.all()
+
     def list(self, request):
         # permission
         
@@ -24,7 +26,6 @@ class RatingViewSet(BaseAPIView):
     def rating(self, request):
         # permission
         
-        request.user.verify_permission('add_rating')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
@@ -44,6 +45,9 @@ class RatingViewSet(BaseAPIView):
         return Response("Create successfull", status=status.HTTP_201_CREATED)
 
 class LogRatingViewSet(BaseAPIView):
+
+    queryset =  LogRating.objects.all()
+
     def list(self, request):
         # permission
         

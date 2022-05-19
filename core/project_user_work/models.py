@@ -4,7 +4,7 @@ from ..project.models import Project
 
 class ProjectUserWork(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project_id = models.ForeignKey(Project,related_name='project_id' ,on_delete=models.CASCADE)
     position = models.CharField(max_length=100)
     work = models.CharField(max_length=100)
     achieves = models.CharField(max_length=100)
@@ -19,3 +19,4 @@ class ProjectUserWork(models.Model):
                                   verbose_name=('Updated by'))
     class Meta:
         db_table = "project_user_work"
+

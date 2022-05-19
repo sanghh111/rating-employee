@@ -87,7 +87,6 @@ class BasicAuthentication(BaseAuthentication):
 
         try:
             auth_parts = base64.b64decode(auth[1]).decode(HTTP_HEADER_ENCODING).partition(':')
-            print('auth_parts: ', auth_parts)
             username, password = auth_parts[0], auth_parts[2]
         except (TypeError, UnicodeDecodeError, binascii.Error):
             raise exceptions.AuthenticationFailed("exception_data(error_code=BASIC_AUTH_NOT_VALID)")

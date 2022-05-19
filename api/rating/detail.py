@@ -16,9 +16,11 @@ from api.base.api_view import BaseAPIView
 
 class DetailRatingViewSet(BaseAPIView):
 
+    queryset =  DetailRating.objects.all()
+
     def list(self, request):
         # permission
-        request.user.verify_permission('view_detailrating')
+        # request.user.verify_permission('view_detailrating')
 
         user_id_assessor = self.request.query_params.get('user_id_assessor', None)
         user_id_rated = self.request.query_params.get('user_id_rated', None)
@@ -52,7 +54,6 @@ class DetailRatingViewSet(BaseAPIView):
 
     def create(self, request, *args, **kwagrs):
         # permission
-        request.user.verify_permission('add_detailrating')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
@@ -95,7 +96,6 @@ class DetailRatingViewSet(BaseAPIView):
 
     def update(self, request):
         # permission
-        request.user.verify_permission('change_detailrating')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
@@ -145,7 +145,6 @@ class DetailRatingViewSet(BaseAPIView):
     
     def delete(self, request):
         # permission
-        request.user.verify_permission('delete_detailrating')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)

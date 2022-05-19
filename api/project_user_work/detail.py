@@ -10,8 +10,13 @@ from django.db.models import F
 from api.base.api_view import BaseAPIView
 
 class ProjecUserWorkDetailViewSet(BaseAPIView):
+
+    queryset = ProjectUserWork.objects.all()
+
     def update(self, request):
         # permission
+
+
         request.user.verify_permission('change_projectuserwork')
 
         if not request.body:
@@ -49,7 +54,6 @@ class ProjecUserWorkDetailViewSet(BaseAPIView):
 
     def delete(self, request):
         # permission
-        request.user.verify_permission('delete_projectuserwork')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)

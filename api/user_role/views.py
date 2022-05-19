@@ -8,9 +8,11 @@ from django.forms.models import model_to_dict
 from django.http import Http404
 
 class UserRoleViewSet(BaseAPIView):
+
+    queryset = UserRole.objects.all()
+
     def list(self, request):
         # permission
-        request.user.verify_permission('view_userrole')
 
         user_role = UserRole.objects.annotate(
             user_name = F('user_id__username'),
@@ -28,7 +30,6 @@ class UserRoleViewSet(BaseAPIView):
 
     def create(self, request):
         # permission
-        request.user.verify_permission('add_userrole')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
@@ -51,7 +52,6 @@ class UserRoleViewSet(BaseAPIView):
 
     def update(self, request):
         # permission
-        request.user.verify_permission('change_userrole')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
@@ -78,7 +78,6 @@ class UserRoleViewSet(BaseAPIView):
 
     def delete(self, request):
         # permission
-        request.user.verify_permission('delete_userrole')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)

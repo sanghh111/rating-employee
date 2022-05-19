@@ -10,10 +10,13 @@ from django.db.models import F
 from api.base.api_view import BaseAPIView
 
 
+
 class ProjectUserWorkViewSet(BaseAPIView):
+
+    queryset  = ProjectUserWork.objects.all()
+
     def list(self, request):
         # permission
-        request.user.verify_permission('view_projectuserwork')
 
         project_user_works = ProjectUserWork.objects.annotate(
             username=F('user_id__username'),
@@ -36,7 +39,6 @@ class ProjectUserWorkViewSet(BaseAPIView):
     def create(self, request, *args, **kwargs):
         # permission
         
-        request.user.verify_permission('add_projectuserwork')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)

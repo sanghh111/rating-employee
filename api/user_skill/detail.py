@@ -9,10 +9,12 @@ from django.db.models import F
 from api.base.api_view import BaseAPIView
 from core.views.models import UserRolePermission
 class UserSkillDetailViewSet(BaseAPIView):
+
+    queryset = UserSkill.objects.all()
+
     def update(self, request):
         # permission
         
-        request.user.verify_permission('change_userskill')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
@@ -45,7 +47,6 @@ class UserSkillDetailViewSet(BaseAPIView):
 
     def delete(self, request):
         # permission
-        request.user.verify_permission('delete_userskill')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)

@@ -10,13 +10,9 @@ from api.base.api_view import BaseAPIView
 from api.base.permissions import IsActiveUser
 class GroupSkillViewSet(BaseAPIView):
 
-    permission_classes = [IsActiveUser]
+    queryset = GroupSkill.objects.all()
 
     def list(self, request):
-        # permission
-        # request.user.verify_permission('view_groupskill')
-
-
 
         group_skill_id = self.request.query_params.get("id", None)
         group_skill_name = self.request.query_params.get("name", None)
@@ -32,26 +28,28 @@ class GroupSkillViewSet(BaseAPIView):
         return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
-        # permission
-        # request.user.verify_permission('add_groupskill')
 
         if not request.body:
-            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
+            return Response("Data invalid", status=status.HTTP_400_BAD_REQUEST)
         else:
             data = orjson.loads(request.body)
 
         group_skill_name = data.get('group_skill_name', None)
-
-        group_skill = GroupSkill.objects.create(
-            group_skill_name = group_skill_name
-        )
-
+        try:
+            group_skill = GroupSkill.objects.create(
+                group_skill_name = group_skill_name
+            )
+        except Exception as e:
+            return Response(e,status= status.HTTP_400_BAD_REQUEST)
         if group_skill:
             return Response("Create successful", status=status.HTTP_201_CREATED)
         else:
             return Response("Errol", status=status.HTTP_400_BAD_REQUEST)
 
 class SkillViewSet(BaseAPIView):
+
+    queryset = Skill.objects.all()
+
     def list(self, request):
 
         skills = Skill.objects.annotate(
@@ -69,8 +67,6 @@ class SkillViewSet(BaseAPIView):
         
 
     def create(self, request, *args, **kwargs):
-        # permission
-        # request.user.verify_permission('add_groupskill')
         
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)

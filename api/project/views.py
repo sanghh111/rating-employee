@@ -11,6 +11,8 @@ from api.base.api_view import BaseAPIView
 
 class ProjectViewSet(BaseAPIView):
 
+    queryset = Project.objects.all()
+
     def list(self, request):
         # permission
         request.user.verify_permission('view_project')

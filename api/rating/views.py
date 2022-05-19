@@ -17,7 +17,6 @@ class RatingViewSet(BaseAPIView):
     def list(self, request):
         # permission
         
-        request.user.verify_permission('view_rating')
 
         ratings = Rating.objects.all().values()
         return Response(ratings)
@@ -48,8 +47,6 @@ class LogRatingViewSet(BaseAPIView):
     def list(self, request):
         # permission
         
-        request.user.verify_permission('view_lograting')
-
         user_id_assessor = self.request.query_params.get('user_id_assessor', None)
         user_id_rated = self.request.query_params.get('user_id_rated', None)
 

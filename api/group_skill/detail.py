@@ -6,13 +6,14 @@ from rest_framework import status
 from django.http import Http404
 import orjson
 from django.db.models import F
-from api.base.api_view import BaseAPIView
+from api.base.api_view import CustomAPIView
 
-class GroupSkillDetailViewSet(BaseAPIView):
+class GroupSkillDetailViewSet(CustomAPIView):
+
+    queryset = GroupSkill.objects.all()
 
     def update(self, request):
         # permission
-        request.user.verify_permission('change_groupskill')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
@@ -53,10 +54,12 @@ class GroupSkillDetailViewSet(BaseAPIView):
         return Response("Group skill not found", status=status.HTTP_404_NOT_FOUND)
 
 
-class SkillDetailViewSet(BaseAPIView):
+class SkillDetailViewSet(CustomAPIView):
+
+    queryset = Skill.objects.all()
+
     def get_detail(self, request):
         # permission
-        request.user.verify_permission('view_skill')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
@@ -79,7 +82,6 @@ class SkillDetailViewSet(BaseAPIView):
     
     def update(self, request):
         # permission
-        request.user.verify_permission('change_skill')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)

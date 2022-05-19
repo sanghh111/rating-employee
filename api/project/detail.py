@@ -10,9 +10,10 @@ from django.db.models import F
 from api.base.api_view import BaseAPIView
 
 class ProjectDetailViewSet(BaseAPIView):
+
+    queryset = Project.objects.all()
+
     def update(self, request, format = None):
-        # permission
-        request.user.verify_permission('change_project')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)

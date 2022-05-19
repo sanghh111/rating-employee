@@ -9,9 +9,11 @@ from django.db.models import F
 from api.base.api_view import BaseAPIView
 
 class RoleViewSet(BaseAPIView):
+
+    queryset = Role.objects.all()
+
     def list(self, request):
         # permission
-        request.user.verify_permission('view_role')
         roles = Role.objects.all()
         serializer = RoleSerializer(roles, many=True)
         return Response(serializer.data)
@@ -39,7 +41,6 @@ class RoleViewSet(BaseAPIView):
 
     def delete(self, request):
         # permission
-        request.user.verify_permission('delete_role')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)

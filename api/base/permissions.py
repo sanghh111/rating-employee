@@ -7,7 +7,7 @@ class IsActiveUser(DjangoModelPermissions):
     """
 
     perms_map = {
-        'GET': ['list_%(model_name)s'],
+        'GET': ['view_%(model_name)s'],
         'OPTIONS': [],
         'HEAD': [],
         'POST': ['add_%(model_name)s'],
@@ -17,6 +17,7 @@ class IsActiveUser(DjangoModelPermissions):
     }
 
     def has_permission(self, request, view):
+
 
         if getattr(view, '_ignore_model_permissions', False):
             return True

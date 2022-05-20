@@ -6,6 +6,7 @@ from rest_framework import status
 from .serializers import PermissionSerializer
 class APIPermission(BaseAPIView):
 
+    queryset = Permission.objects.all()
 
     def list(self, request, *args, **kwargs):
         

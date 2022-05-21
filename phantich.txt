@@ -1,0 +1,15 @@
+2 kiểu ratings
+
+SKILL PRIORITY của skill
+
+User xem skill của mình
+
+xem Rating của mình
+
+Tính score 
+
+Làm documment
+
+export data
+
+Reconmandation chưa hiểu (MÁY HỌC THÌ DATA NHỎ QUÁ )

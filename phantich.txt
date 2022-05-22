@@ -1,5 +1,11 @@
 2 kiểu ratings
 
+Rating Manager:
+    + Create Raing 
+    + Detail Rating 
+    +
+
+
 SKILL PRIORITY của skill
 
 User xem skill của mình

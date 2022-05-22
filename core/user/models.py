@@ -1,6 +1,8 @@
 import binascii
 from datetime import date
 import os
+from re import I
+from turtle import position
 from django.contrib.auth.models import User, AbstractUser
 from django.db import models
 from django.contrib.auth.hashers import check_password, make_password
@@ -9,6 +11,7 @@ from core.views.models import UserRolePermission
 from rest_framework import status
 from api.base.exception import CustomAPIException
 from core.permission.models import RolePermission, UserPermission
+from core.role.models import UserRole
 class User(AbstractUser):
     position_role = models.IntegerField(blank=True, null=True)
     
@@ -102,3 +105,14 @@ class User(AbstractUser):
             return True
         except UserPermission.DoesNotExist:
             return False
+
+
+    def get_position(self):
+        try: 
+            user_role = UserRole.objects.annotate(user_role_id  = models.F('user_id__id'),
+                                      priority = models.F('role_id__priority')).get(
+                                          user_role_id = self.id
+                                      )
+            return user_role 
+        except UserRole.DoesNotExist:
+            return None

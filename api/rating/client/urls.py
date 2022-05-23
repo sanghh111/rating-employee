@@ -6,6 +6,7 @@ urlpatterns = [
                                 'post':'create'})),
     path('<int:pk>/',APIRatingDetail.as_view({
         'get':'list',
-        'put': 'update'
+        'put': 'update',
+        'delete': 'destroy'
     }))
 ]

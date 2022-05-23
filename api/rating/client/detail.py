@@ -139,4 +139,61 @@ class APIRatingDetail(ViewSet):
     """
 
     def destroy(self,request, *args, **kwargs):
-        pass
+        
+        if not request.body:
+            return Response(data= "BODY NO DATA",status= 400)
+
+        priority = self.request.user.get_position()        
+        #LOAD DATA
+        data = orjson.loads(request.body)
+        delete_parent = data.get('delete_parent',None)
+
+        priority = request.user.get_position()
+        #MEMBER    
+        if priority == 1 :
+            rating = Rating.objects.annotate(
+                user_rated_id = models.F('user_id_rated__id') 
+            ).filter(user_rated_id = self.request.user.id)
+        #MANAGER
+        elif priority == 2:
+            list_user = User.objects.filter(position='API').values_list('id')
+            rating = Rating.objects.filter(user_id_rated_id__in = list_user)
+        #PRINCIPLE
+        elif priority ==3:
+            rating = Rating.objects.all()
+        else:
+            pass
+        if  kwargs:
+            try:
+                rating = rating.get(**kwargs)
+            except Rating.DoesNotExist:
+                return Response(
+                    "NOT FOUDND",
+                    404
+                )
+        if delete_parent:
+            rating.delete()
+        else:
+            try:
+                log = LogRating.objects.get(user_id_assessor = request.user.id,
+                                rating_id = kwargs['pk'])
+            except LogRating.DoesNotExist:
+                return Response(data = "NOT FOUND",status=status.HTTP_404_NOT_FOUND)
+            log.delete()
+            log_ratings = LogRating.objects.filter(rating_id = kwargs['pk']).values_list('weight','score')
+            if log_ratings.exists():
+                total_score = 0
+                total_weight = 0
+                for log_rating in log_ratings:
+                    total_score += ((SCORE.index(log_rating[1])+1) * log_rating[0])
+                    total_weight += log_rating[0]
+                score  =  int(round(total_score/total_weight,0))-1
+                rating.score = SCORE[score]
+            else :
+                rating.score = None
+                rating.save()
+            rating.save()
+        return Response(
+            data = 'OK',
+            status= status.HTTP_200_OK
+        )

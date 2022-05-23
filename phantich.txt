@@ -23,3 +23,19 @@ Làm documment
 export data
 
 Reconmandation chưa hiểu (MÁY HỌC THÌ DATA NHỎ QUÁ )
+
+log_dict ={
+                        'rating_id' : rating.id,
+                        'user_id_assessor' : log_rating.user_id_assessor,
+                        'score' : log_rating.score,
+                        'description' : log_rating.description,
+                        'action' : log_rating.action,
+                        'created_at' : log_rating.created_at,
+                        'created_by' : log_rating.created_by,
+                        'updated_at'  : log_rating.updated_at,
+                        'updated_by' : log_rating.updated_by,
+                        'weight' :  log_rating.weight,
+                    }
+                    print('log_dict: ', log_dict)
+                    log_dict.update(modify =  log_rating.user_id_assessor == request.user) 
+                    print('log_dict: ', log_dict)   

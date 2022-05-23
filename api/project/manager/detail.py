@@ -8,7 +8,7 @@ from django.http import Http404
 import orjson
 from django.db.models import F
 from api.base.api_view import BaseAPIView
-
+from core.user.models import User
 class ProjectDetailViewSet(BaseAPIView):
 
     queryset = Project.objects.all()
@@ -26,7 +26,7 @@ class ProjectDetailViewSet(BaseAPIView):
         date_start = data.get('date_start', None)
         date_end = data.get('date_end', None)
         tech_stack = data.get('tech_stack', None)    
-
+        project_manager = data.get('project_manager',None)
         project = Project.objects.filter(pk=id).first()
         if not project:
             return Response("Project not found", status=status.HTTP_404_NOT_FOUND)
@@ -41,6 +41,11 @@ class ProjectDetailViewSet(BaseAPIView):
             project.date_end = date_end
         if tech_stack:
             project.tech_stack = tech_stack
+        if project_manager:
+            try:
+                project.project_manager =  User.objects.get(id = project_manager)
+            except Project.DoesNotExist:
+                return ("NOT FOUND",404)
 
         serializer = ProjectSerializer(project)
         return Response(serializer.data)

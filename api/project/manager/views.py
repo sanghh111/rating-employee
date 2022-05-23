@@ -6,6 +6,7 @@ from rest_framework import status
 import orjson
 from django.db.models import F
 from api.base.api_view import BaseAPIView
+from core.user.models import User
 
 # from api.base.decorator import permission, has_permission
 
@@ -15,7 +16,6 @@ class ProjectViewSet(BaseAPIView):
 
     def list(self, request):
         # permission
-        request.user.verify_permission('view_project')
 
         project_id = self.request.query_params.get('id', None)
         project_name = self.request.query_params.get('project_name', None)
@@ -38,7 +38,6 @@ class ProjectViewSet(BaseAPIView):
   
     def create(self, request, *args, **kwargs):
         # permission
-        request.user.verify_permission('add_project')
         
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
@@ -49,13 +48,21 @@ class ProjectViewSet(BaseAPIView):
         date_start = data.get('date_start')
         date_end = data.get('date_end')
         tech_stack = data.get('tech_stack')
-
+        project_manager = data.get('project_manager',None)
+        if project_manager:
+            return Response("MISSING DATA",400)
+        else:
+            try:
+                project_manager = User.objects.get(id = project_manager)
+            except Project.DoesNotExist:
+                return Response("DATA NOT FOUND",404)
         project = Project.objects.create(
             project_name = project_name,
             description = description,
             date_start = date_start,
             date_end = date_end,
-            tech_stack = tech_stack
+            tech_stack = tech_stack,
+            project_manager = project_manager
             )
         if not project:
             return Response("Errol", status=status.HTTP_400_BAD_REQUEST)

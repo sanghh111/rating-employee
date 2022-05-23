@@ -109,9 +109,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-               'api.base.authentication.TokenAuthentication',
-    ),
+        'DEFAULT_AUTHENTICATION_CLASSES': (
+                   'api.base.authentication.TokenAuthentication',
+                   'rest_framework.authentication.SessionAuthentication'
+        ),
     "DEFAULT_RENDERER_CLASSES": (
                 "drf_orjson_renderer.renderers.ORJSONRenderer",
                 "rest_framework.renderers.BrowsableAPIRenderer",

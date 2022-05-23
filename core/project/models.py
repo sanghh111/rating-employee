@@ -1,4 +1,6 @@
 from django.db import models
+from core.user.models import User
+
 
 class Project(models.Model):
     project_name = models.CharField(max_length=100, null=True)
@@ -6,7 +8,7 @@ class Project(models.Model):
     date_start = models.DateField(null=True)
     date_end = models.DateField(null=True)
     tech_stack = models.CharField(max_length=100, null=True )
-
+    project_manager = models.ForeignKey(User,on_delete= models.CASCADE, null = True)
     created_at = models.DateTimeField(auto_now_add=True, db_column='created_at', blank=True, null=True,
                                       verbose_name=('Created at'))
     updated_at = models.DateTimeField(auto_now=True, db_column='modified_at', blank=True, null=True,

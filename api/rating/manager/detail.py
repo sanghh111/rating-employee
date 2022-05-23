@@ -6,7 +6,7 @@ from ..serializes import  RatingSerializer, LogRatingSerializer
 from rest_framework import status 
 from datetime import datetime
 
-class APIRating(BaseAPIView):
+class APIDetailRating(BaseAPIView):
     queryset = Rating.objects.all()
 
     def list(self, request, *args, **kwargs):

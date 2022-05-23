@@ -13,7 +13,7 @@ from api.base.exception import CustomAPIException
 from core.permission.models import RolePermission, UserPermission
 from core.role.models import UserRole
 class User(AbstractUser):
-    position_role = models.IntegerField(blank=True, null=True)
+    position = models.CharField(blank=True,max_length=100,null=True)
     
     rank = models.CharField(max_length=100)
 
@@ -113,6 +113,6 @@ class User(AbstractUser):
                                       priority = models.F('role_id__priority')).get(
                                           user_role_id = self.id
                                       )
-            return user_role 
+            return user_role.priority
         except UserRole.DoesNotExist:
             return None

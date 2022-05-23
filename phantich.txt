@@ -5,6 +5,10 @@ Rating Manager:
     + Detail Rating 
     +
 
+MANAGER RATING CREATE RATING PERMISSION
+CONFIG API PROJECT
+
+Raing addd Project Manager
 
 SKILL PRIORITY của skill
 

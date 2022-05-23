@@ -1,5 +1,6 @@
 import os
 from tokenize import Pointfloat
+from turtle import position
 
 import django
 
@@ -8,8 +9,9 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'rating_employee.settings')
 
 django.setup()
 
-from core.user.models import User,RolePermission
+from core.user.models import User,RolePermission, UserRole
 from core.project.models import Project
+from core.rating.models import Rating
 from api.user.serializers import UserSerializer
 from django.db import models
 
@@ -39,3 +41,18 @@ from django.db import models
 
 
 
+# a = UserRole.objects.annotate(user_role_id  = models.F('user_id__id'),
+#                                       priority = models.F('role_id__priority')).get(
+#                                           user_role_id = 2
+#                                       )
+# print(a.priority)
+
+# list_user = User.objects.filter(position='API').values_list('id')
+# ratings = Rating.objects.filter(user_id_rated_id__in = list_user)
+# # print('rating: ', rating)
+# for rating in ratings:
+#     print(f'{rating.id}, {rating.user_id_rated}')
+
+# a =  ['D','C','B','A','S']
+
+# print(a.index('d'))

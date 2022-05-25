@@ -25,11 +25,16 @@ class CustomAPIView(GenericViewSet):
             self.renderer_classes = (ORJSONRenderer,)
         # super().initial(self, request, *args, **kwargs)
         self.check_permissions(request)
+        
+    def get_serializer(self, *args, **kwargs):
+        pass
 
 class BaseAPIView(CustomAPIView):
     def initial(self, request, *args, **kwargs):
         super().initial(request, *args, **kwargs)
         self.user = request.user
+
+    
 
 def get_encode_header(request):
     if request:

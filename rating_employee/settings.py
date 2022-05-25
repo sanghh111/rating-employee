@@ -120,10 +120,11 @@ REST_FRAMEWORK = {
     "ORJSON_RENDERER_OPTIONS": (
         orjson.OPT_NON_STR_KEYS,
         orjson.OPT_SERIALIZE_DATACLASS,
-        orjson.OPT_SERIALIZE_NUMPY,
     ),
     "DEFAULT_PARSER_CLASSES": (
         "drf_orjson_renderer.parsers.ORJSONParser",
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser'
     ),
 }
 

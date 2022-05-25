@@ -56,3 +56,4 @@ from django.db import models
 # a =  ['D','C','B','A','S']
 
 # print(a.index('d'))
+print(True or False)

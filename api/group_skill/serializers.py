@@ -1,3 +1,4 @@
+from importlib.metadata import requires
 from rest_framework import serializers
 from ..serializers import BasicSerializer
 
@@ -11,3 +12,8 @@ class   GroupSkillSerializer(BasicSerializer):
     group_skill_name = serializers.CharField()
     skills = SkillSerializer(source="skill_set", many = True)
 
+class GroupSkillRequestSerializer(BasicSerializer):
+    group_skill_name = serializers.CharField()
+
+class SkillRequestSerializer(BasicSerializer):
+    name = serializers.CharField()

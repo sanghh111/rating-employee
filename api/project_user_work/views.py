@@ -8,14 +8,21 @@ from django.http import Http404
 import orjson
 from django.db.models import F
 from api.base.api_view import BaseAPIView
-
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
 
 class ProjectUserWorkViewSet(BaseAPIView):
 
     queryset  = ProjectUserWork.objects.all()
-
-    def list(self, request):
+    
+    @swagger_auto_schema(
+        operation_description= "LIST PROJECT USER WORK",
+        responses= {
+            '201':"OK"
+        }
+        )
+    def list(self, request, *args, **kwargs):
         # permission
 
         project_user_works = ProjectUserWork.objects.annotate(
@@ -36,13 +43,28 @@ class ProjectUserWorkViewSet(BaseAPIView):
         )
         return Response(project_user_works)
 
+    @swagger_auto_schema(
+        operation_description= "CREATE PROJECT USER WORK",
+        request_body= openapi.Schema(
+            type =  openapi.TYPE_OBJECT,
+            properties= {
+                'project_id': openapi.Schema(type =  openapi.TYPE_STRING),
+                'user_id': openapi.Schema(type =  openapi.TYPE_STRING),
+                'position': openapi.Schema(type =  openapi.TYPE_STRING),
+                'work': openapi.Schema(type =  openapi.TYPE_STRING),
+                'achieves': openapi.Schema(type =  openapi.TYPE_STRING),
+            }
+        ),
+        responses={
+            201 :"CREATE OK",
+            404 :"NOT FOUND"
+        }
+    )
     def create(self, request, *args, **kwargs):
-        # permission
         
-
-        if not request.body:
-            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
-        data = orjson.loads(request.body)
+        seriliazer = ProjectUserWorkSerializer(data = request.data)
+        seriliazer.is_valid(raise_exception=True)
+        data =seriliazer.data
 
         project_id = data.get('project_id', None)
         user_id = data.get('user_id', None)
@@ -50,9 +72,14 @@ class ProjectUserWorkViewSet(BaseAPIView):
         work = data.get('work', None)
         achieves = data.get('achieves', None)
 
-        project = Project.objects.filter(pk=project_id).fisrt()
-        user = User.objects.filter(pk=user_id).fisrt()
-
+        try:
+            project = Project.objects.get(pk=project_id)
+        except Project.DoesNotExist:
+            return Response("NOT FOUND", 404)
+        try:
+            user = User.objects.get(pk=user_id)
+        except:
+            return Response("NOT FOUND",404)
         project_user_work = ProjectUserWork.objects.create(
             project_id = project,
             user_id = user,

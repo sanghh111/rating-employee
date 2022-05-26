@@ -10,7 +10,7 @@ urlpatterns = [
 
     path('skill/list/', SkillViewSet.as_view({'get':'list'})),
     path('skill/create/', SkillViewSet.as_view({'post':'create'})),
-    path('skill/detail/', SkillDetailViewSet.as_view({'get':'get_detail'})),
-    path('skill/update/', SkillDetailViewSet.as_view({'put':'update'})),
-    path('skill/delete/', SkillDetailViewSet.as_view({'delete':'delete'})),
+    path('skill/detail/<int:id>', SkillDetailViewSet.as_view({'get':'get_detail'})),
+    path('skill/update/<int:id>', SkillDetailViewSet.as_view({'put':'update'})),
+    path('skill/delete/<int:id>', SkillDetailViewSet.as_view({'delete':'delete'})),
 ]   

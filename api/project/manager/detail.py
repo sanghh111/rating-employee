@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ViewSet
 from core.project.models import Project
-from ..serializers import ProjectSerializer
+from ..serializers import ProjectRequsetSerializer, ProjectSerializer
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -9,16 +9,33 @@ import orjson
 from django.db.models import F
 from api.base.api_view import BaseAPIView
 from core.user.models import User
+from drf_yasg import openapi 
+from drf_yasg.utils import swagger_auto_schema
 class ProjectDetailViewSet(BaseAPIView):
 
     queryset = Project.objects.all()
 
-    def update(self, request, format = None):
+    @swagger_auto_schema(operation_description="UPDATE PROJECT",
+                        request_body=openapi.Schema(
+                            type= openapi.TYPE_OBJECT,
+                            properties= {
+                                'project_name':openapi.Schema(type = openapi.TYPE_STRING),
+                                'description':openapi.Schema(type = openapi.TYPE_STRING),
+                                'date_start':openapi.Schema(type = openapi.TYPE_STRING),
+                                'date_end':openapi.Schema(type = openapi.TYPE_STRING),
+                                'tech_stack':openapi.Schema(type = openapi.TYPE_STRING),
+                                'project_manager':openapi.Schema(type = openapi.TYPE_STRING),
+                            }
+                        ),responses={
+                            200 : 'UPDATE OK',
+                            404 : "NOT FOUND PROJECT / USER"
+                        }
+            )
+    def update(self, request, *args, **kwargs):
 
-        if not request.body:
-            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
-        else:
-            data = orjson.loads(request.body)
+        serializer = ProjectRequsetSerializer(data = request.data)
+        serializer.is_valid(True)
+        data = serializer.data
 
         id = data.get('id', None)
         project_name = data.get('project_name', None)
@@ -27,7 +44,7 @@ class ProjectDetailViewSet(BaseAPIView):
         date_end = data.get('date_end', None)
         tech_stack = data.get('tech_stack', None)    
         project_manager = data.get('project_manager',None)
-        project = Project.objects.filter(pk=id).first()
+        project = Project.objects.filter(**kwargs).first()
         if not project:
             return Response("Project not found", status=status.HTTP_404_NOT_FOUND)
 
@@ -46,21 +63,20 @@ class ProjectDetailViewSet(BaseAPIView):
                 project.project_manager =  User.objects.get(id = project_manager)
             except Project.DoesNotExist:
                 return ("NOT FOUND",404)
-
+        project.save()
         serializer = ProjectSerializer(project)
         return Response(serializer.data)
     
-    def delete(self, request):
+    @swagger_auto_schema(operation_description= "DELETE PROJECT",
+                        responses={
+                            200 : "DELETE OK",
+                            '404' : 'NOT FOUND PROJECT '
+                        }
+                        )
+    def delete(self, request,*args, **kwargs):
         # permission
-        request.user.verify_permission('delete_project')
 
-        if not request.body:
-            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
-        data = orjson.loads(request.body)
-
-        id = data.get('project_id', None)
-
-        project = Project.objects.filter(pk=id).first()
+        project = Project.objects.filter(**kwargs).first()
         if not project:
             return Response("Project not found", status=status.HTTP_404_NOT_FOUND)
         try:

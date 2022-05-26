@@ -13,6 +13,7 @@ class   GroupSkillSerializer(BasicSerializer):
     skills = SkillSerializer(source="skill_set", many = True)
 
 class GroupSkillRequestSerializer(BasicSerializer):
+    id = serializers.IntegerField(read_only=True, required=False)
     group_skill_name = serializers.CharField()
 
 class SkillRequestSerializer(BasicSerializer):

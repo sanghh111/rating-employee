@@ -31,4 +31,4 @@ class Skill(models.Model):
     class Meta:
         db_table = "skill"
     def __str__(self):
-        return self.skill_name
+        return self.name

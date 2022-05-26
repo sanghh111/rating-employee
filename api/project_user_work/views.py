@@ -48,8 +48,8 @@ class ProjectUserWorkViewSet(BaseAPIView):
         request_body= openapi.Schema(
             type =  openapi.TYPE_OBJECT,
             properties= {
-                'project_id': openapi.Schema(type =  openapi.TYPE_STRING),
-                'user_id': openapi.Schema(type =  openapi.TYPE_STRING),
+                'project_id': openapi.Schema(type =  openapi.TYPE_INTEGER),
+                'user_id': openapi.Schema(type =  openapi.TYPE_INTEGER),
                 'position': openapi.Schema(type =  openapi.TYPE_STRING),
                 'work': openapi.Schema(type =  openapi.TYPE_STRING),
                 'achieves': openapi.Schema(type =  openapi.TYPE_STRING),

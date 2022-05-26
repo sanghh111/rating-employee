@@ -1,3 +1,4 @@
+import imp
 from rest_framework.viewsets import ViewSet
 from core.models import Project, ProjectUserWork, User
 from .serializers import ProjectUserWorkSerializer
@@ -8,20 +9,41 @@ from django.http import Http404
 import orjson
 from django.db.models import F
 from api.base.api_view import BaseAPIView
+from drf_yasg import openapi 
+from drf_yasg.utils import  swagger_auto_schema
 
 class ProjecUserWorkDetailViewSet(BaseAPIView):
 
     queryset = ProjectUserWork.objects.all()
 
+    @swagger_auto_schema(
+        operation_description= "UPDATE PROJECT USER WORK",
+        request_body= openapi.Schema(
+            type = openapi.TYPE_OBJECT,
+            properties= {
+                'id' : openapi.Schema(openapi.TYPE_STRING),
+                'project_id' : openapi.Schema(openapi.TYPE_STRING),
+                'user_id' : openapi.Schema(openapi.TYPE_STRING),
+                'position' : openapi.Schema(openapi.TYPE_STRING),
+                'work' : openapi.Schema(openapi.TYPE_STRING),
+                'achieves' : openapi.Schema(openapi.TYPE_STRING),
+                
+            }
+        )
+        responses= {
+            200 : "UPDATE OK"
+            404 : "NOT FOUND"
+        }
+
+    )
     def update(self, request):
         # permission
 
+        serializer = ProjectUserWorkSerializer(data = request.data)
+        serializer.is_valid(True)
+        data = serializer.data
 
-        request.user.verify_permission('change_projectuserwork')
 
-        if not request.body:
-            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
-        data = orjson.loads(request.body)
 
         id = data.get('id', None)
         project_id = data.get('project_id', None)
@@ -52,14 +74,23 @@ class ProjecUserWorkDetailViewSet(BaseAPIView):
         serializer = ProjectUserWorkSerializer(project_user_work)
         return Response(serializer.data)
 
+
+    @swagger_auto_schema(operation_description= "DELETE USER WORK",
+                        request_body= openapi.Schema(
+                            type = openapi.TYPE_OBJECT,
+                            properties= {
+                                'id' : openapi.Schema(type=openapi.TYPE_INTEGER)
+                            }
+                        ),
+                        responses={
+                            200 : "DELETE OK",
+                            '404':  "NOT FOUND"
+                        })
     def delete(self, request):
         # permission
 
-        if not request.body:
-            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
-        data = orjson.loads(request.body)
 
-        id = data.get('id', None)
+        id = request.data.('id', None)
         project_user_work = ProjectUserWork.objects.filter(pk = id).first()
         if not project_user_work:
             return Response("not found", status=status.HTTP_404_NOT_FOUND)

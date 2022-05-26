@@ -9,10 +9,17 @@ from core.models import Rating, LogRating
 from core.user.models import User
 from django.db import models 
 from constant.score  import SCORE
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 class APIRating(ViewSet):
     
     permission_classes = [IsAuthenticated]
-
+    @swagger_auto_schema(
+        operation_description="LIST RATING BY ROLE USER",
+        responses={
+            200: "OK"
+        }
+    )
     def list(self,request,*args, **kwargs):
         
         #EXPRESSION POSITION
@@ -44,13 +51,26 @@ class APIRating(ViewSet):
     #   'score'
     #   'description'  
     # }
+    @swagger_auto_schema(
+        operation_description= "REVIEW FOR RATING",
+        request_body= openapi.Schema(
+            type= openapi.TYPE_OBJECT,
+            properties={
+                'id' : openapi.Schema(type= openapi.TYPE_INTEGER),
+                'score':openapi.Schema( type= openapi.TYPE_STRING),
+                'description' : openapi.Schema(type = openapi.TYPE_STRING)
+            }
+        ),        responses= {
+            201: "CREATE OK",
+            400: "MISSING DATA",
+            404: "NOT FOUND"
+        }
+    )
     def create(self,request,*args, **kwargs):
-        if not request.body:
-            return Response(data= "BODY NO DATA",status= 400)
         
         priority = self.request.user.get_position()        
         #LOAD DATA
-        data = orjson.loads(request.body)
+        data = request.data
         id_rating = data.get('id',None)
         score = data.get('score',None)
         description = data.get('description',None)

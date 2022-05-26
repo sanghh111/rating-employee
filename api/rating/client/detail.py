@@ -8,11 +8,20 @@ from rest_framework.response import  Response
 from django.db import models
 from constant.score import SCORE
 from datetime import datetime
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
 
 class APIRatingDetail(ViewSet):
     
     permission_classes = [IsAuthenticated]
-
+    @swagger_auto_schema(
+        operation_description= "LOG RATING",
+        responses={
+            200:"OK",
+            400:"NOT FOUND"
+        }
+    )
     def list(self,request,*args, **kwargs):
                 
         priority = request.user.get_position()
@@ -62,19 +71,30 @@ class APIRatingDetail(ViewSet):
         }
     """
 
+    @swagger_auto_schema(
+        operation_description="UPDATE LOG RATING",
+        request_body= openapi.Schema(
+            type = openapi.TYPE_OBJECT,
+            properties= {
+                'score':openapi.Schema(type=openapi.TYPE_STRING),
+                'description':openapi.Schema(type=openapi.TYPE_STRING),
+            }
+        ),
+        responses= {
+            '200' : "UPDATE OK",
+            '401' : "UNAUTHORIZED",
+            "404" : "NOT FOUND"
+
+        }
+    )
     def update(self,request, *args, **kwargs):
-        if not request.body:
-            return Response(data= "BODY NO DATA",status= 400)
 
         priority = self.request.user.get_position()        
         #LOAD DATA
-        data = orjson.loads(request.body)
+        data = request.data
         id_rating = kwargs['pk']
         score = data.get('score',None)
         description = data.get('description',None)
-
-        if score == None:
-            return Response(data = "Missing Data",status=400)
 
         if  score not in SCORE :
             return Response(data = "SCORE MUST BE ['D','C','B','A','S']",status= 400)
@@ -109,7 +129,10 @@ class APIRatingDetail(ViewSet):
         except LogRating.DoesNotExist:
             return Response(data = "NOT FOUND",status=status.HTTP_404_NOT_FOUND)
 
-        log.score = score
+        if score:
+            log.score = score
+        if description:
+            log.description = description
         log.action = "UPDATE"
         log.updated_at = datetime.now()
         log.updated_by= request.user.username
@@ -138,6 +161,21 @@ class APIRatingDetail(ViewSet):
         }
     """
 
+    @swagger_auto_schema(
+        operation_description="DELETE RATING IF delete_parent = True and Delete log rating delete_parent = Flase",
+        request_body= openapi.Schema(
+            type = openapi.TYPE_OBJECT,
+            properties={
+                'delete_parent': openapi.Schema(type= openapi.TYPE_BOOLEAN)
+            }
+        ),
+        responses={
+            200:"DELETE OK",
+            404:"NOT FOUND",
+        }
+        
+        
+        )
     def destroy(self,request, *args, **kwargs):
         
         if not request.body:

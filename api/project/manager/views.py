@@ -57,8 +57,8 @@ class ProjectViewSet(BaseAPIView):
                 properties= {
                     'project_name' : openapi.Schema(type=openapi.TYPE_STRING),
                     'description' : openapi.Schema(type=openapi.TYPE_STRING),
-                    'date_start' : openapi.Schema(type=openapi.TYPE_STRING),
-                    'date_end' : openapi.Schema(type=openapi.TYPE_STRING),
+                    'date_start' : openapi.Schema(type=openapi.FORMAT_DATE,description="YYYY-MM-DD" ),
+                    'date_end' : openapi.Schema(type=openapi.FORMAT_DATE,description="YYYY-MM-DD"),
                     'tech_stack' : openapi.Schema(type=openapi.TYPE_STRING),
                     'project_manager' : openapi.Schema(type = openapi.TYPE_INTEGER)
                 }

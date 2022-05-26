@@ -21,17 +21,16 @@ class ProjecUserWorkDetailViewSet(BaseAPIView):
         request_body= openapi.Schema(
             type = openapi.TYPE_OBJECT,
             properties= {
-                'id' : openapi.Schema(openapi.TYPE_STRING),
-                'project_id' : openapi.Schema(openapi.TYPE_STRING),
-                'user_id' : openapi.Schema(openapi.TYPE_STRING),
-                'position' : openapi.Schema(openapi.TYPE_STRING),
-                'work' : openapi.Schema(openapi.TYPE_STRING),
-                'achieves' : openapi.Schema(openapi.TYPE_STRING),
-                
+                'id' : openapi.Schema(type = openapi.TYPE_STRING),
+                'project_id' : openapi.Schema(type = openapi.TYPE_STRING),
+                'user_id' : openapi.Schema(type = openapi.TYPE_STRING),
+                'position' : openapi.Schema(type = openapi.TYPE_STRING),
+                'work' : openapi.Schema(type = openapi.TYPE_STRING),
+                'achieves' : openapi.Schema(type = openapi.TYPE_STRING),
             }
-        )
+        ),
         responses= {
-            200 : "UPDATE OK"
+            200 : "UPDATE OK",
             404 : "NOT FOUND"
         }
 
@@ -90,7 +89,7 @@ class ProjecUserWorkDetailViewSet(BaseAPIView):
         # permission
 
 
-        id = request.data.('id', None)
+        id = request.data.get('id', None)
         project_user_work = ProjectUserWork.objects.filter(pk = id).first()
         if not project_user_work:
             return Response("not found", status=status.HTTP_404_NOT_FOUND)

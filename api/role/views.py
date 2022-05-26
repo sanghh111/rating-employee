@@ -7,24 +7,47 @@ from django.http import Http404
 import orjson
 from django.db.models import F
 from api.base.api_view import BaseAPIView
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
 
 class RoleViewSet(BaseAPIView):
 
     queryset = Role.objects.all()
 
+    @swagger_auto_schema(
+        operation_description= "LIST ROLE",
+        responses={
+            200 : "OK"
+        }        
+    )
     def list(self, request):
         # permission
         roles = Role.objects.all()
         serializer = RoleSerializer(roles, many=True)
         return Response(serializer.data)
     
+
+    @swagger_auto_schema(
+        operation_description= "CREATE ROLE",
+        request_body= openapi.Schema(
+            type = openapi.TYPE_OBJECT,
+            properties={
+                'name': openapi.Schema(type=openapi.TYPE_STRING),
+                'description': openapi.Schema(type=openapi.TYPE_STRING),
+                'priority': openapi.Schema(type=openapi.TYPE_STRING),
+            }
+        ),
+        responses= {
+            201 : "CREATE OK",
+            401 : "UNAUTHORIZED"
+        }
+
+    )
     def create(self, request):
         # permission
-        request.user.verify_permission('add_role')
 
-        if not request.body:
-            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
-        data = orjson.loads(request.body)
+        data = request.data
 
         name = data.get('name', None)
         description = data.get('description', None)
@@ -39,12 +62,23 @@ class RoleViewSet(BaseAPIView):
             return Response("Errol", status=status.HTTP_400_BAD_REQUEST)
         return Response("Create successful", status=status.HTTP_201_CREATED)
 
+    @swagger_auto_schema(
+        operation_description= "DELETE ROLE",
+        request_body= openapi.Schema(
+            type = openapi.TYPE_OBJECT,
+            properties={
+                'role_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+            }
+        ),
+        responses= {
+            200 : "DELETE OK",
+            401 : "UNAUTHORIZED",
+            404 : "NOT FOUND"
+        }
+        )
     def delete(self, request):
         # permission
-
-        if not request.body:
-            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
-        data = orjson.loads(request.body)
+        data = request.data
 
         role_id = data.get("role_id", None)
         role = Role.objects.filter(pk=role_id).first()

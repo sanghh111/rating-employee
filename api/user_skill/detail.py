@@ -66,7 +66,7 @@ class UserSkillDetailViewSet(BaseAPIView):
         request_body= openapi.Schema(
             type = openapi.TYPE_OBJECT,
             properties={
-                'id': openapi.Schema(tyoe = openapi.TYPE_INTEGER)
+                'id': openapi.Schema(type = openapi.TYPE_INTEGER),
             }
         ),
         responses={

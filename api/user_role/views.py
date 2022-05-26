@@ -6,11 +6,20 @@ from django.db.models import F
 from api.base.api_view import BaseAPIView
 from django.forms.models import model_to_dict
 from django.http import Http404
+from drf_yasg import openapi 
+from drf_yasg.utils import swagger_auto_schema
+
 
 class UserRoleViewSet(BaseAPIView):
 
     queryset = UserRole.objects.all()
 
+    @swagger_auto_schema(
+        operation_description= "LIST USER ROLE",
+        responses={
+            200 : "OK",
+            401: "UNAUTHORIZED"
+        })
     def list(self, request):
         # permission
 
@@ -28,12 +37,27 @@ class UserRoleViewSet(BaseAPIView):
         )
         return Response(user_role)
 
+
+    @swagger_auto_schema(
+        operation_description= "CREATE USER ROLE",
+        request_body= openapi.Schema(
+            type= openapi.TYPE_OBJECT,
+            properties={
+                'user_id' : openapi.Schema(type= openapi.TYPE_INTEGER),
+                'role_id' : openapi.Schema(type= openapi.TYPE_INTEGER),
+            }
+        ),
+        responses={
+            201 : "CREATE OK",
+            400 : "MISSING DATA",
+            401 : "UNAUTHORIZED",
+            404 : "NOT FOUND"
+        }
+    )
     def create(self, request):
         # permission
 
-        if not request.body:
-            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
-        data = orjson.loads(request.body)
+        data = request.data
 
         user_id = data.get('user_id', None)
         role_id = data.get('role_id', None)
@@ -49,13 +73,27 @@ class UserRoleViewSet(BaseAPIView):
             return Response("Errol", status=status.HTTP_400_BAD_REQUEST)
         return Response("Create successful", status=status.HTTP_201_CREATED)
 
-
+    @swagger_auto_schema(
+        operation_description= "UPDATE USER ROLE",
+        request_body= openapi.Schema(
+            type= openapi.TYPE_OBJECT,
+            properties={
+                'id' : openapi.Schema(type= openapi.TYPE_INTEGER),
+                'user_id' : openapi.Schema(type= openapi.TYPE_INTEGER),
+                'role_id' : openapi.Schema(type= openapi.TYPE_INTEGER),
+            }
+        ),
+        responses={
+            200 : "UPDATE OK",
+            400 : "MISSING DATA",
+            401 : "UNAUTHORIZED",
+            404 : "NOT FOUND"
+        }
+    )
     def update(self, request):
         # permission
 
-        if not request.body:
-            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
-        data = orjson.loads(request.body)
+        data = request.data
 
         id = data.get('id', None)
         user_id = data.get('user_id', None)
@@ -76,12 +114,26 @@ class UserRoleViewSet(BaseAPIView):
         data = model_to_dict(user_role)
         return Response(data)
 
+
+    @swagger_auto_schema(
+        operation_description= "DELETE USER ROLE",
+        request_body= openapi.Schema(
+            type= openapi.TYPE_OBJECT,
+            properties={
+                'id' : openapi.Schema(type= openapi.TYPE_INTEGER),
+            }
+        ),
+        responses={
+            200 : "DELETE OK",
+            400 : "MISSING DATA",
+            401 : "UNAUTHORIZED",
+            404 : "NOT FOUND"
+        }
+    )
     def delete(self, request):
         # permission
 
-        if not request.body:
-            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
-        data = orjson.loads(request.body)
+        data = request.data
 
         id = data.get('id', None)
 

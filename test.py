@@ -59,12 +59,20 @@ from django.db import models
 # print(a.index('d'))
 # print(True or False)/
 
-skill = Skill.objects.annotate(
-                skill_name=models.F('name'),
-                group_skill_name=models.F('group_skill_id__group_skill_name'),
-            ).get(id=2).field(
-                'id',
-                'skill_name',
-                'group_skill_name',
-            )
-print(type(skill))
+# skill = Skill.objects.annotate(
+#                 skill_name=models.F('name'),
+#                 group_skill_name=models.F('group_skill_id__group_skill_name'),
+#             ).get(id=2).field(
+#                 'id',
+#                 'skill_name',
+#                 'group_skill_name',
+#             )
+# print(type(skill))
+
+
+# a = 2.11230000
+# print("{:10.8f}".format(a))
+a = "1231.1231321"
+
+print( float({":.2f".format(a)}))
+# print(t)

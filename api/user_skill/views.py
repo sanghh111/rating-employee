@@ -8,16 +8,35 @@ from django.http import Http404
 import orjson
 from django.db.models import F
 from api.base.api_view import BaseAPIView
+from drf_yasg import openapi 
+from drf_yasg.utils import swagger_auto_schema
+
 
 class UserSkillViewSet(BaseAPIView):
+
+    queryset = UserSkill.objects.all()
+
+    @swagger_auto_schema(
+        operation_description="LIST UserSkill",
+        manual_parameters= [
+            openapi.Parameter('skill_id',openapi.IN_QUERY,type= openapi.TYPE_INTEGER),
+            openapi.Parameter('user_id',openapi.IN_QUERY,type= openapi.TYPE_INTEGER),
+            openapi.Parameter('year_of_experience',openapi.IN_QUERY,type= openapi.TYPE_INTEGER),
+            openapi.Parameter('level',openapi.IN_QUERY,type= openapi.TYPE_INTEGER),
+        ],
+        responses= {
+            200: "OK"
+        }
+    )
     def list(self, request):
         # permission
-        request.user.verify_permission('view_userskill')
 
-        skill_id = self.request.query_params.get('skill_id', None)
-        user_id = self.request.query_params.get('user_id', None)
-        year_of_experience = self.request.query_params.get('year_of_experience', None)
-        level = self.request.query_params.get('level', None)
+
+
+        skill_id =request.query_params.get('skill_id', None)
+        user_id = request.query_params.get('user_id', None)
+        year_of_experience =request.query_params.get('year_of_experience', None)
+        level =request.query_params.get('level', None)
 
         user_skills = UserSkill.objects.annotate(
             user_skill_id = F('id'),
@@ -44,10 +63,32 @@ class UserSkillViewSet(BaseAPIView):
         
         return Response(user_skills)
     
+
+
+    @swagger_auto_schema(
+        operation_description="CREATE SKILL FOR USER",
+        request_body= openapi.Schema(
+            type= openapi.TYPE_OBJECT,
+            properties={
+                'skill_id': openapi.Schema(type= openapi.TYPE_INTEGER),
+                'user_id': openapi.Schema(type= openapi.TYPE_INTEGER),
+                'year_of_experience': openapi.Schema(type= openapi.TYPE_INTEGER),
+                'level': openapi.Schema(type= openapi.TYPE_INTEGER),
+            }
+        ),
+        responses=
+        {
+            201:"CREATE OK",
+            400:"ERROR",
+            401: "UNAUTHORIZED",
+            404:"NOT FOUND"
+
+        }
+        # responses=
+    )
     def create(self, request, *args, **kwargs):
         # permission
         
-        request.user.verify_permission('add_userskill')
 
         if not request.body:
             return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)

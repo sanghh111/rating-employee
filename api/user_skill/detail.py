@@ -8,17 +8,32 @@ import orjson
 from django.db.models import F
 from api.base.api_view import BaseAPIView
 from core.views.models import UserRolePermission
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 class UserSkillDetailViewSet(BaseAPIView):
 
     queryset = UserSkill.objects.all()
-
+    @swagger_auto_schema(
+        operation_description="DETAIL USER SKILL",
+        request_body= openapi.Schema(
+            type= openapi.TYPE_OBJECT,
+            properties={
+                'id':openapi.Schema(type = openapi.TYPE_INTEGER),
+                'user_id':openapi.Schema(type = openapi.TYPE_INTEGER),
+                'year_of_experience':openapi.Schema(type = openapi.TYPE_INTEGER),
+                'level':openapi.Schema(type = openapi.TYPE_INTEGER),
+            }
+        ),
+        responses={
+            200 : "OK",
+            401 : "UNAUTHORIZED",
+            404 : "NOT FOUND"
+        }
+    )
     def update(self, request):
         # permission
         
-
-        if not request.body:
-            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
-        data = orjson.loads(request.body)
+        data = request.data
 
         id = data.get('id', None)
         skill_id = data.get("skill_id", None)
@@ -45,12 +60,24 @@ class UserSkillDetailViewSet(BaseAPIView):
         serializer = UserSkillSerializer(user_skill)
         return Response(serializer.data)
 
+
+    @swagger_auto_schema(
+        operation_description= "DELETE USER SKILL",
+        request_body= openapi.Schema(
+            type = openapi.TYPE_OBJECT,
+            properties={
+                'id': openapi.Schema(tyoe = openapi.TYPE_INTEGER)
+            }
+        ),
+        responses={
+            200: "DELETE OK",
+            404: "NOT FOUND"
+        }
+    )
     def delete(self, request):
         # permission
 
-        if not request.body:
-            return Response("Data invalid", status=status.HTTP_204_NO_CONTENT)
-        data = orjson.loads(request.body)
+        data = request.body
         id = data.get('id', None)
 
         user_skill = UserSkill.objects.filter(pk = id)
